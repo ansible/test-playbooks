@@ -1,0 +1,89 @@
+---
+- name: add 10 hosts to inventory
+  hosts: 'local'
+  vars:
+    num_hosts: 10
+  tasks:
+    - name: create inventory
+      add_host:
+        name: 'host-{{item}}'
+        groups: dynamic
+        ansible_connection: local
+        host_id: '{{item}}'
+      with_sequence: start=0 end={{num_hosts}} format=%d
+
+- name: shrink inventory to 1 host
+  hosts: 'dynamic'
+  tasks:
+    - name: fail even numbered hosts
+      command: 'false'
+      when: host_id|int % 2 == 0
+    - name: skip multiples of 3
+      command: 'true'
+      when: host_id|int % 3 != 0
+    - name: all skipped
+      command: 'true'
+      when: false
+    - name: all changed
+      command: 'true'
+    - name: all ok
+      command: 'true'
+      changed_when: false
+    - name: fail all but 1
+      command: 'false'
+      when: host_id|int != 1
+
+- name: 1 host play
+  hosts: 'host-1'
+  gather_facts: false
+  tasks:
+    - name: pass
+      command: 'true'
+    - name: ok
+      command: 'true'
+      changed_when: false
+    - name: ignored
+      command: 'false'
+      ignore_errors: true
+
+- name: fail remaining dynamic group
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: fail
+      command: 'false'
+      when: inventory_hostname == 'host-1'
+
+- name: add 10 hosts to inventory
+  hosts: 'local'
+  vars:
+    num_hosts: 10
+  tasks:
+    - name: add dynamic inventory
+      add_host:
+        name: 'new-host-{{item}}'
+        groups: dynamic
+        ansible_connection: local
+        host_id: '{{item}}'
+      with_sequence: start=0 end={{(num_hosts|int / 2)|int}} format=%d
+    - name: add unreachable inventory
+      add_host:
+        name: 'unreachable-host-{{item}}'
+        groups: unreachable
+        ansible_connection: UKNOWN
+        host_id: '{{item}}'
+      with_sequence: start={{(num_hosts|int / 2)|int + 1}} end={{num_hosts}} format=%d
+
+- name: some unreachable
+  hosts: dynamic:unreachable
+  gather_facts: false
+  tasks:
+    - name: all changed with items
+      # debug: msg='{{item}}'
+      command: 'true'
+      with_sequence: start=0 end=10 format='This is string number - %d'
+      when: host_id|int % 5 == 0
+
+- name: gather facts fail
+  hosts: unreachable
+  gather_facts: true

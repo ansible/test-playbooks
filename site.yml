@@ -1,0 +1,10 @@
+---
+
+- hosts: all
+  tasks:
+   - name: group hosts by distribution
+     action: group_by key={{ansible_distribution}}
+
+  tasks:
+    - name: site | hello world
+      shell: echo "Hi! AWX is working"
