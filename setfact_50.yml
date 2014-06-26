@@ -2,7 +2,7 @@
 #
 # Sample playbook designed to execute various tasks without spawning a python process
 #
-hosts: all
+- hosts: all
   gather_facts: False
   tasks:
     - set_fact: x=0
