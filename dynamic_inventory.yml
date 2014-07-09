@@ -1,5 +1,5 @@
 ---
-- name: add 10 hosts to inventory
+- name: add hosts to inventory
   hosts: 'local'
   vars:
     num_hosts: 10
@@ -54,7 +54,7 @@
       command: 'false'
       when: inventory_hostname == 'host-1'
 
-- name: add 10 hosts to inventory
+- name: add hosts to inventory
   hosts: 'local'
   vars:
     num_hosts: 10
