@@ -1,6 +1,6 @@
 ---
 - name: add hosts to inventory
-  hosts: 'local'
+  hosts: all
   vars:
     num_hosts: 10
   tasks:
@@ -85,7 +85,7 @@
 
 
 - name: add hosts to inventory
-  hosts: 'local'
+  hosts: all
   vars:
     num_hosts: 10
   tasks:
