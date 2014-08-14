@@ -103,6 +103,13 @@
         ansible_connection: UKNOWN
         host_id: '{{item}}'
       with_sequence: start={{(num_hosts|int / 2)|int + 1}} end={{num_hosts}} format=%d
+    - name: add more_unreachable inventory
+      add_host:
+        name: 'more-unreachable-host-{{item}}'
+        groups: more-unreachable
+        ansible_connection: THIS_WONT_WORK_SUCKA
+        host_id: '{{item}}'
+      with_sequence: start={{(num_hosts|int / 2)|int + 1}} end={{num_hosts}} format=%d
 
 
 - name: some unreachable, some changed, some skipped
@@ -117,12 +124,15 @@
 - name: gather facts fail
   hosts: unreachable
   gather_facts: true
+
+
+- name: some gather facts fail
+  hosts: more-unreachable:dynamic
+  gather_facts: true
   tasks:
     - name: skip this task
       command: 'false'
       when: false
-    - name: this task will fail
-      command: 'false'
 
 
 - name: no tasks, just the facts
