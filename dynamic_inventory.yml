@@ -121,6 +121,10 @@
       when: host_id|int % 5 == 0
 
 
+- name: no matching hosts
+  hosts: no_hosts_will_ever_match_this_string
+
+
 - name: gather facts fail
   hosts: unreachable
   gather_facts: true
