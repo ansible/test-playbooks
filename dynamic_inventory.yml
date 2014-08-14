@@ -117,6 +117,12 @@
 - name: gather facts fail
   hosts: unreachable
   gather_facts: true
+  tasks:
+    - name: skip this task
+      command: 'false'
+      when: false
+    - name: this task will fail
+      command: 'false'
 
 
 - name: no tasks, just the facts
