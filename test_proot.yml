@@ -1,0 +1,35 @@
+---
+# Launch a job and assert that it cannot:
+#   - see /var/lib/awx/projects (except for self)
+#   - see /var/lib/awx/job_status
+#   - see /tmp/ (except for self)
+#   - see /etc/awx/settings.py
+#   - see /var/log/
+
+- hosts: all
+  gather_facts: true
+  tasks:
+    - command: ls -l /tmp/
+      register: result
+    - debug: var=result
+
+    - command: ls -l /var/lib/awx/projects/
+      register: result
+    - debug: var=result
+
+    - command: ls -l /var/lib/awx/job_status/
+      register: result
+    - debug: var=result
+
+    - stat: path=/etc/tower/settings.py
+      register: result
+    - debug: var=result
+
+    - command: ls -l /var/log/
+      register: result
+    - debug: var=result
+
+    - command: ls -l /var/log/supervisor
+      register: result
+    - debug: var=result
+
