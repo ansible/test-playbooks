@@ -36,11 +36,11 @@
     - command: find {{tower_job_status_dir}} -mindepth 1 -maxdepth 1 -type f
       register: result
     - debug: var=result
-    - name: assert that only one job_status file is visible
+    - name: assert that no job_status files are visible
       assert:
         that:
           - 'result.rc == 0'
-          - 'result.stdout_lines|length == 1'
+          - 'result.stdout_lines|length == 0'
 
     - command: cat /etc/tower/settings.py
       ignore_errors: true
