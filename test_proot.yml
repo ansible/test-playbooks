@@ -50,7 +50,7 @@
       assert:
         that:
           - 'result.rc == 1'
-          - '"Permission denied" in result.stderr'
+          - '"No such file or directory" in result.stderr'
 
     - command: find {{supervisor_log_dir}} -mindepth 1 -maxdepth 1 -type f
       ignore_errors: true
