@@ -15,6 +15,8 @@
     supervisor_log_dir: /var/log/supervisor
 
   tasks:
+    - pause: seconds=15 prompt="Pausing 15 seconds to allow other jobs to queue up"
+
     - command: find {{tower_tmp_dir}} -mindepth 1 -maxdepth 1 -type d -name 'ansible_tower*'
       register: result
     - debug: var=result
