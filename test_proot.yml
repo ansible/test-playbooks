@@ -8,28 +8,57 @@
 
 - hosts: all
   gather_facts: true
+  vars:
+    tower_tmp_dir: /tmp
+    tower_projects_dir: /var/lib/awx/projects
+    tower_job_status_dir: /var/lib/awx/job_status
+    supervisor_log_dir: /var/log/supervisor
+
   tasks:
-    - command: ls -l /tmp/
+    - command: find {{tower_tmp_dir}} -maxdepth 1 -type d -name 'ansible_tower*'
       register: result
     - debug: var=result
+    - name: assert that only one ansible_tower_XXXXX tempfile is visible
+      assert:
+      that:
+        - 'result.rc == 0'
+        - 'len(result.stdout_lines) == 1'
 
-    - command: ls -l /var/lib/awx/projects/
+    - command: find {{tower_projects_dir}} -maxdepth 1 -type d
       register: result
     - debug: var=result
+    - name: assert that only one tower project directory is visible
+      assert:
+      that:
+        - 'result.rc == 0'
+        - 'len(result.stdout_lines) == 1'
 
-    - command: ls -l /var/lib/awx/job_status/
+    - command: find {{tower_job_status_dir}} -maxdepth 1 -type f
       register: result
     - debug: var=result
+    - name: assert that only one job_status file is visible
+      assert:
+      that:
+        - 'result.rc == 0'
+        - 'len(result.stdout_lines) == 1'
 
-    - stat: path=/etc/tower/settings.py
+    - command: cat /etc/tower/settings.py
+      ignore_errors: true
       register: result
     - debug: var=result
+    - name: assert that /etc/tower/settings.py is not readable
+      assert:
+      that:
+        - 'result.failed'
+        - '"Permission denied" in result.stderr'
 
-    - command: ls -l /var/log/
+    - command: find {{supervisor_log_dir}} -maxdepth 1 -type f
+      ignore_errors: true
       register: result
     - debug: var=result
-
-    - command: ls -l /var/log/supervisor
-      register: result
-    - debug: var=result
+    - name: assert that no supervisor logs are visible
+      assert:
+      that:
+        - 'result.failed
+        - '"Permission denied" in result.stderr'
 
