@@ -10,14 +10,15 @@
   gather_facts: true
   vars:
     tower_conf_dir: /etc/tower
-    tower_tmp_dir: /tmp
-    tower_log_dir: /var/log/tower
+    tower_tmp_dirs:
+        - /tmp
+        - /var/tmp
+    sys_log_dir: /var/log
     tower_projects_dir: /var/lib/awx/projects
     tower_job_status_dir: /var/lib/awx/job_status
-    supervisor_log_dir: /var/log/supervisor
 
   tasks:
-    - command: find {{tower_tmp_dir}} -mindepth 1 -maxdepth 1 -type d -name 'ansible_tower*'
+    - command: find {{tower_tmp_dirs|join(' ')}} -mindepth 1 -maxdepth 1 -type d -name 'ansible_tower*'
       register: result
     - debug: var=result
     - name: assert that only one ansible_tower_XXXXX tempfile is visible
@@ -44,16 +45,6 @@
           - 'result.rc == 0'
           - 'result.stdout_lines|length == 0'
 
-    - command: find {{supervisor_log_dir}} -mindepth 1 -maxdepth 1 -type f
-      ignore_errors: true
-      register: result
-    - debug: var=result
-    - name: assert that no supervisor logs are visible
-      assert:
-        that:
-          - 'result.rc == 0'
-          - 'result.stdout_lines|length == 0'
-
     - command: find {{tower_conf_dir}} -mindepth 1 -maxdepth 1 -type f
       ignore_errors: true
       register: result
@@ -64,7 +55,7 @@
           - 'result.rc == 0'
           - 'result.stdout_lines|length == 0'
 
-    - command: find {{tower_log_dir}} -mindepth 1 -maxdepth 1 -type f
+    - command: find {{sys_log_dir}} -mindepth 1 -maxdepth 1 -type f
       ignore_errors: true
       register: result
     - debug: var=result
@@ -72,4 +63,4 @@
       assert:
         that:
           - 'result.rc == 0'
-          - 'result.stdout_lines|length == 0'
+          # - 'result.stdout_lines|length == 0'
