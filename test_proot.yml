@@ -9,6 +9,7 @@
 - hosts: all
   gather_facts: true
   vars:
+    tower_conf_dir: /etc/tower
     tower_tmp_dir: /tmp
     tower_projects_dir: /var/lib/awx/projects
     tower_job_status_dir: /var/lib/awx/job_status
@@ -42,16 +43,6 @@
           - 'result.rc == 0'
           - 'result.stdout_lines|length == 0'
 
-    - command: cat /etc/tower/settings.py
-      ignore_errors: true
-      register: result
-    - debug: var=result
-    - name: assert that /etc/tower/settings.py is not readable
-      assert:
-        that:
-          - 'result.rc == 1'
-          - '"No such file or directory" in result.stderr'
-
     - command: find {{supervisor_log_dir}} -mindepth 1 -maxdepth 1 -type f
       ignore_errors: true
       register: result
@@ -59,5 +50,16 @@
     - name: assert that no supervisor logs are visible
       assert:
         that:
-          - 'result.rc == 1'
-          - '"Permission denied" in result.stderr'
+          - 'result.rc == 0'
+          - 'result.stdout_lines|length == 0'
+
+    - command: find {{tower_conf_dir}} -mindepth 1 -maxdepth 1 -type f
+      ignore_errors: true
+      register: result
+    - debug: var=result
+    - name: assert that settings.py is not visible
+      assert:
+        that:
+          - 'result.rc == 0'
+          - 'result.stdout_lines|length == 0'
+
