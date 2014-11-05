@@ -11,6 +11,7 @@
   vars:
     tower_conf_dir: /etc/tower
     tower_tmp_dir: /tmp
+    tower_log_dir: /var/log/tower
     tower_projects_dir: /var/lib/awx/projects
     tower_job_status_dir: /var/lib/awx/job_status
     supervisor_log_dir: /var/log/supervisor
@@ -57,9 +58,18 @@
       ignore_errors: true
       register: result
     - debug: var=result
-    - name: assert that settings.py is not visible
+    - name: assert that no tower conf files are visible
       assert:
         that:
           - 'result.rc == 0'
           - 'result.stdout_lines|length == 0'
 
+    - command: find {{tower_log_dir}} -mindepth 1 -maxdepth 1 -type f
+      ignore_errors: true
+      register: result
+    - debug: var=result
+    - name: assert that no tower log files are visible
+      assert:
+        that:
+          - 'result.rc == 0'
+          - 'result.stdout_lines|length == 0'
