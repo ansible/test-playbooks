@@ -18,6 +18,9 @@
     tower_job_status_dir: /var/lib/awx/job_status
 
   tasks:
+    - name: 'Wait 30 seconds before proceeding...'
+      pause: seconds=30
+
     - command: find {{tower_tmp_dirs|join(' ')}} -mindepth 1 -maxdepth 1 -type d -name 'ansible_tower*'
       register: result
     - debug: var=result
