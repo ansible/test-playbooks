@@ -4,9 +4,8 @@
   hosts: all
   gather_facts: false
   vars:
-    seconds: 30
+    sleep_interval: 30s
 
   tasks:
-    - name: sleep for a specified seconds
-      pause:
-        seconds: '{{ seconds }}'
+    - name: sleep for a specified interval
+      command: sleep '{{ sleep_interval }}'
