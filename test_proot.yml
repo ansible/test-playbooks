@@ -30,7 +30,7 @@
           - 'result.rc == 0'
           - 'result.stdout_lines|length == 1'
 
-    - command: find {{tower_projects_dir}} -mindepth 1 -maxdepth 1 -type d
+    - command: find {{tower_projects_dir}}/ -mindepth 1 -maxdepth 1 -type d
       register: result
     - debug: var=result
     - name: assert that only one tower project directory is visible
