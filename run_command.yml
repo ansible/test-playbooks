@@ -1,0 +1,6 @@
+---
+
+- hosts: all
+  gather_facts: true
+  tasks:
+    - command: '{{command}}'
