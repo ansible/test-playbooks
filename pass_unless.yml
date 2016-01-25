@@ -1,9 +1,0 @@
----
-
-- hosts: all
-  vars:
-   fail: false
-
-  tasks:
-   - fail: msg="Congrats, you asked for this playbook to fail ... and it has"
-     when: fail
