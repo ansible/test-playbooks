@@ -34,6 +34,11 @@
         host_id: '{{item}}'
       with_sequence: start=1 end={{num_hosts}} format=%d
 
+- name: 'A role with unicode name'
+  hosts: all
+  roles:
+  - { role: utf-8-䉪ቒ칸ⱷꯔ噂폄蔆㪗輥 }
+
 - name: 'A play for hosts in group: ĪīĬĭ'
   hosts: 'ĪīĬĭ'
   gather_facts: true
