@@ -1,0 +1,6 @@
+---
+
+- hosts: all
+  tasks:
+    - name: 'Fail if not run with --check'
+      shell: 'exit 1'
