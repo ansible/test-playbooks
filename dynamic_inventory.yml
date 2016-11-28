@@ -100,14 +100,14 @@
       add_host:
         name: 'unreachable-host-{{item}}'
         groups: unreachable
-        ansible_connection: UKNOWN
+        ansible_connection: ssh
         host_id: '{{item}}'
       with_sequence: start={{(num_hosts|int / 2)|int + 1}} end={{num_hosts}} format=%d
     - name: add more_unreachable inventory
       add_host:
         name: 'more-unreachable-host-{{item}}'
         groups: more-unreachable
-        ansible_connection: THIS_WONT_WORK_SUCKA
+        ansible_connection: ssh
         host_id: '{{item}}'
       with_sequence: start={{(num_hosts|int / 2)|int + 1}} end={{num_hosts}} format=%d
 
