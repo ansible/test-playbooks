@@ -2,25 +2,25 @@
 from argparse import ArgumentParser
 from pprint import pprint
 
-inventory = {'group_one': {'hosts': ['group_one_host_0{}'.format(i) for i in range(1, 6)]
-                                    + ['group_one_and_two_host_0{}'.format(i) for i in range(1, 6)]
-                                    + ['group_one_two_and_three_host_0{}'.format(i) for i in range(1, 6)],
-                           'vars': {'is_in_group_one': True}},
-             'group_two': {'hosts': ['group_two_host_0{}'.format(i) for i in range(1, 6)]
-                                    + ['group_one_and_two_host_0{}'.format(i) for i in range(1, 6)]
-                                    + ['group_two_and_three_host_0{}'.format(i) for i in range(1, 6)]
-                                    + ['group_one_two_and_three_host_0{}'.format(i) for i in range(1, 6)],
-                           'vars': {'is_in_group_two': True}},
-             'group_three': {'hosts': ['group_three_host_0{}'.format(i) for i in range(1, 6)]
-                                    + ['group_two_and_three_host_0{}'.format(i) for i in range(1, 6)]
-                                    + ['group_one_two_and_three_host_0{}'.format(i) for i in range(1, 6)],
-                             'vars': {'is_in_group_three': True}},
+inventory = {'group_four': {'hosts': ['group_four_host_0{}'.format(i) for i in range(1, 6)]
+                                    + ['group_four_and_five_host_0{}'.format(i) for i in range(1, 6)]
+                                    + ['group_four_five_and_six_host_0{}'.format(i) for i in range(1, 6)],
+                           'vars': {'is_in_group_four': True}},
+             'group_five': {'hosts': ['group_five_host_0{}'.format(i) for i in range(1, 6)]
+                                    + ['group_four_and_five_host_0{}'.format(i) for i in range(1, 6)]
+                                    + ['group_five_and_six_host_0{}'.format(i) for i in range(1, 6)]
+                                    + ['group_four_five_and_six_host_0{}'.format(i) for i in range(1, 6)],
+                           'vars': {'is_in_group_five': True}},
+             'group_six': {'hosts': ['group_six_host_0{}'.format(i) for i in range(1, 6)]
+                                    + ['group_five_and_six_host_0{}'.format(i) for i in range(1, 6)]
+                                    + ['group_four_five_and_six_host_0{}'.format(i) for i in range(1, 6)],
+                             'vars': {'is_in_group_six': True}},
              'all': {'vars': {'ansible_connection': 'local',
                               'inventories_var': True}},
-             'ungrouped': {'hosts': ['ungrouped_host_0{}'.format(i) for i in range(1, 6)]},
-             '_meta': {'hostvars': {'group_one_host_01': {'group_one_host_01_has_this_var': True},
-                                    'group_two_host_01': {'group_two_host_01_has_this_var': True},
-                                    'group_three_host_01': {'group_three_host_01_has_this_var': True}}}}
+             'ungrouped': {'hosts': ['ungrouped_host_{}'.format('0{}'.format(i) if len(str(i)) == 1 else i) for i in range(6, 11)]},
+             '_meta': {'hostvars': {'group_four_host_01': {'group_four_host_01_has_this_var': True},
+                                    'group_five_host_01': {'group_five_host_01_has_this_var': True},
+                                    'group_six_host_01': {'group_six_host_01_has_this_var': True}}}}
 
 def parse_args():
     parser = ArgumentParser()
