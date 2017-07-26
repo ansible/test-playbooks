@@ -1,0 +1,11 @@
+---
+
+- hosts: all
+  gather_facts: false
+  tasks:
+    - debug:
+        msg: '{{ansible_distribution}}'
+    - debug:
+        msg: '{{ansible_machine}}'
+    - debug:
+        msg: '{{ansible_system}}'
