@@ -5,7 +5,10 @@ from pprint import pprint
 inventory = {'group_one': {'hosts': ['group_one_host_0{}'.format(i) for i in range(1, 6)]
                                     + ['group_one_and_two_host_0{}'.format(i) for i in range(1, 6)]
                                     + ['group_one_two_and_three_host_0{}'.format(i) for i in range(1, 6)],
-                           'vars': {'is_in_group_one': True}},
+                           'vars': {'is_in_group_one': True,
+                                    'complex_var': [{"dir": "/opt/gwaf/logs",
+                                                     "sourcetype": "gwaf",
+                                                     "something_else": [1, 2, 3]}]}},
              'group_two': {'hosts': ['group_two_host_0{}'.format(i) for i in range(1, 6)]
                                     + ['group_one_and_two_host_0{}'.format(i) for i in range(1, 6)]
                                     + ['group_two_and_three_host_0{}'.format(i) for i in range(1, 6)]
