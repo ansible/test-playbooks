@@ -1,7 +1,7 @@
 - hosts: all
   gather_facts: false
   tasks:
-    - scan_facts:
+    - test_scan_facts:
     - debug:
         msg: "{{item}}"
       with_items:
