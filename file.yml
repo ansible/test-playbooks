@@ -1,0 +1,10 @@
+---
+
+- hosts: all
+  gather_facts: false
+  vars:
+    file_name: '/tmp/test'
+  tasks:
+    - file:
+        path: '{{file_name}}'
+        state: touch
