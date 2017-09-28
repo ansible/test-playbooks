@@ -21,14 +21,14 @@
     - name: 'Wait 30 seconds before proceeding...'
       pause: seconds=30
 
-    - command: find {{tower_tmp_dirs|join(' ')}} -mindepth 1 -maxdepth 1 -type d -name 'ansible_tower*'
+    - command: find {{tower_tmp_dirs|join(' ')}} -mindepth 1 -maxdepth 1 -type d -regex '.*ansible_tower.*\|.*awx_proot.*'
       register: result
     - debug: var=result
     - name: assert that only one ansible_tower_XXXXX tempfile is visible
       assert:
         that:
           - 'result.rc == 0'
-          - 'result.stdout_lines|length == 1'
+          - 'result.stdout_lines|length <= 1'
 
     - command: find {{tower_projects_dir}}/ -mindepth 1 -maxdepth 1 -type d
       register: result
