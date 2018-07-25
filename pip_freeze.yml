@@ -1,0 +1,7 @@
+- hosts: all
+  tasks:
+    - name: List installed python packages
+      shell: pip freeze
+
+    - name: Show ansible version
+      shell: ansible --version
