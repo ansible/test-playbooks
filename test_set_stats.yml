@@ -1,31 +1,33 @@
 ---
 - hosts: localhost
-  tasks:
-  - set_stats:
-      data:
+  vars:
+    set_stats_data:
+      string: 'abc'
+      integer: 123
+      float: 1.0
+      unicode: '竳䙭韽'
+      boolean: true
+      none: null
+      list:
+        - 'abc'
+        - 123
+        - 1.0
+        - '竳䙭韽'
+        - true
+        - null
+        - []
+        - {}
+      object:
         string: 'abc'
         integer: 123
         float: 1.0
         unicode: '竳䙭韽'
         boolean: true
-        none: null
-        list:
-          - 'abc'
-          - 123
-          - 1.0
-          - '竳䙭韽'
-          - true
-          - null
-          - []
-          - {}
-        object:
-          string: 'abc'
-          integer: 123
-          float: 1.0
-          unicode: '竳䙭韽'
-          boolean: true
-          none: null            
-          list: []
-          object: {}
-        empty_list: []
-        empty_object: {} 
+        none: null            
+        list: []
+        object: {}
+      empty_list: []
+      empty_object: {} 
+  tasks:
+  - set_stats:
+      data: "{{ set_stats_data }}"
