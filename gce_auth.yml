@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+    - gce:
+        instance_names: this-is-an-instance-created-by-tower-qa-tests
+        state: "{{ state }}"
