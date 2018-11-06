@@ -1,0 +1,15 @@
+---
+- name: Test use of credentials with cloud module, taken from Ansible docs
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+
+    - name: Create a new instance, per example (credential_type=openstack)
+      tags:
+        - openstack
+      os_server:
+           state: "{{ state | default('absent') }}"
+           name: 8ut0o26a1g  # should not match anything
+

@@ -1,0 +1,12 @@
+---
+- name: Test use of credentials with cloud module, taken from Ansible docs
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+
+    - name: Ovirt (credential_type=rhv)
+      tags:
+        - rhv
+      ovirt_auth:

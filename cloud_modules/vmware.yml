@@ -1,0 +1,18 @@
+---
+- name: Test use of credentials with cloud module, taken from Ansible docs
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+
+    - name: VMWare Clone the template (credential_type=vmware)
+      tags:
+        - vmware
+      vmware_guest:
+        name: testvm_2_8ut0o26a1g  # should not match anything
+        template: template_el7
+        datacenter: DC1
+        folder: /DC1/vm
+        state: "{{ state | default('absent') }}"
+        wait_for_ip_address: yes

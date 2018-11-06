@@ -1,0 +1,14 @@
+---
+- name: Test use of credentials with cloud module, taken from Ansible docs
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+
+    - name: Provision a set of instances (credential_type=aws)
+      ec2:
+         state: "{{ state | default('absent') }}"
+         instance_ids: ["8ut0o26a1g"]  # should not match anything
+      tags:
+        - aws
