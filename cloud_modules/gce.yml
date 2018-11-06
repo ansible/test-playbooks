@@ -1,5 +1,7 @@
 ---
-- hosts: all
+- hosts: localhost
+  connection: local
+  gather_facts: False
   tasks:
     - gce:
         instance_names: this-is-an-instance-created-by-tower-qa-tests

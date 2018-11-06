@@ -1,0 +1,23 @@
+---
+- name: Test use of credentials with cloud module, taken from Ansible docs
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+
+    - name: Provision a set of instances (credential_type=aws)
+      ec2:
+         key_name: my_key
+         group: test
+         instance_type: t2.micro
+         image: "123456789"
+         wait: true
+         exact_count: 5
+         count_tag:
+            Name: Demo
+         instance_tags:
+            Name: Demo
+      register: ec2
+      tags:
+        - aws
