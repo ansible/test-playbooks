@@ -10,7 +10,7 @@
       tags:
         - tower
       tower_inventory:
-        name: my-inventory
+        name: my_inventory_8ut0o26a1g  # should not match anything
         organization: Default
-        state: present
+        state: "{{ state | default('absent') }}"
 
