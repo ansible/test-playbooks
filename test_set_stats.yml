@@ -27,7 +27,10 @@
         list: []
         object: {}
       empty_list: []
-      empty_object: {} 
+      empty_object: {}
+    fail_at_end: false
   tasks:
   - set_stats:
       data: "{{ set_stats_data }}"
+  - fail: "Intentionally failing because variable 'fail_at_end' was set to {{ fail_at_end }}"
+    when: fail_at_end
