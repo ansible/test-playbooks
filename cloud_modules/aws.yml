@@ -10,6 +10,6 @@
       ec2:
          state: "{{ state | default('absent') }}"
          instance_ids: ["8ut0o26a1g"]  # should not match anything
-      region: us-east-2
+         region: us-east-2
       tags:
         - aws
