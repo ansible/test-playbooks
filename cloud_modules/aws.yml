@@ -6,9 +6,13 @@
 
   tasks:
 
-    - name: Provision a set of instances (credential_type=aws)
-      ec2:
-         state: "{{ state | default('absent') }}"
-         instance_ids: ["8ut0o26a1g"]  # should not match anything
+    - name: Add or remove this specific tag from instance (credential_type=aws)
+      ec2_tag:
+        region: us-east-2
+        resource: "{{ instance_id | default('i-8a6ff363') }}"
+        tags:
+            Foooooo: ''
+        state: "{{ state | default('absent') }}"
+        purge_tags: false
       tags:
         - aws
