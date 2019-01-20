@@ -1,0 +1,17 @@
+plugin: linode
+# Linode inventory plugin inventory, partial example
+# 
+# This should be operable with only the access_token provided
+# the linode inventory plugin also allows for providing the
+# access token via an environment variable, so you might use this like:
+# 
+# LINODE_ACCESS_TOKEN=foobar ansible-inventory -i plugins/example_linode/linode.yml --list
+# 
+# The linode inventory plugin was (or will be) introduced in Ansible 2.8
+# If you do not have that version of Ansible, it should give an error
+#   from the auto plugin that the inventory specifies unknown plugin
+# This requires linode_api4 dependency to work, so in your venv run:
+#    pip install linode_api4
+#   without that, it will error that it requires linode_api4
+# If you don't specify the auth token, then it should give an error specific
+#   to this scenario, that auth isn't specified
