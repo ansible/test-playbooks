@@ -1,0 +1,30 @@
+---
+- name: Test Task Summaries
+  hosts: all
+  gather_facts: False
+  tasks:
+    - name: Rescue Test
+      block:
+        - name: Fail if the fail_main variable has been set on the host
+          fail:
+            msg: "YOU HAVE FAILED"
+          when: fail_main == True
+
+        - name: Fail if fail_and_ignore is set
+          fail:
+            msg: "It's okay"
+          when: fail_and_ignore == True
+          ignore_errors: True
+
+        - name: Debug task
+          debug:
+            msg: "This didn't fail."
+      rescue:
+        - name: Fail if fail_rescue is set
+          fail:
+            msg: "YOU HAVE FAILED AGAIN!"
+          when: fail_rescue == True
+
+        - name: Debug task
+          debug:
+            msg: "Rescue Successful"
