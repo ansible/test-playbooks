@@ -43,11 +43,11 @@ def parse_args():
 def load_inventory():
     args = parse_args()
     if args.requested_host:
-        print dumps(hostvars.get(args.requested_host, {}))
+        print(dumps(hostvars.get(args.requested_host, {})))
     elif args.list_instances:
-        print dumps(inventory)
+        print(dumps(inventory))
     else:
-        print {}
+        print({})
 
 
 if __name__ == '__main__':
