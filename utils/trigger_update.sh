@@ -13,7 +13,7 @@ git checkout inventory_additions
 touch $TMPFILE
 git add $TMPFILE
 git commit -m "Adding temporary file $TMPFILE"
-git push -f git@github.com:jlaska/ansible-playbooks.git inventory_additions
+git push -f git@github.com:ansible/test-playbooks.git inventory_additions
 git rm $TMPFILE
 git commit -m "Removing temporary file $TMPFILE"
-git push -f git@github.com:jlaska/ansible-playbooks.git inventory_additions
+git push -f git@github.com:ansible/test-playbooks.git inventory_additions
