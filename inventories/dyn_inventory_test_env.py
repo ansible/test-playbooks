@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from argparse import ArgumentParser
-from pprint import pprint
 from datetime import datetime
 import os
 
@@ -8,6 +7,7 @@ inventory = {'all': {'vars': {'ansible_connection': 'local'}},
              'ungrouped': {'hosts': ['localhost']},
              '_meta': {'hostvars': {'localhost': {'test_env': os.environ.get('TEST_ENV', False),
                                                   'current_time': str(datetime.now())}}}}
+
 
 def parse_args():
     parser = ArgumentParser()
@@ -20,7 +20,7 @@ def parse_args():
 def load_inventory():
     args = parse_args()
     if args.list_instances:
-        pprint(inventory)
+        print(inventory)
 
 
 if __name__ == '__main__':
