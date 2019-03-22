@@ -1,0 +1,4 @@
+plugin: openstack
+# openstack inventory plugin inventory, partial example
+# This should be operable with an openstack credential in tower as an scm inventory
+# openstacksdk must be installed in venv to successfully use plugin
