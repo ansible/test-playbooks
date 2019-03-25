@@ -1,3 +1,2 @@
 plugin: aws_ec2
 # aws_ec2 inventory plugin inventory, partial example
-# This should be operable with an aws credential in tower as an scm inventory
