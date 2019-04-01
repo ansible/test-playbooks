@@ -1,0 +1,5 @@
+plugin: gcp_compute
+projects:
+    - ansible-tower-engineering
+# google cloud inventory plugin inventory, partial example
+# requires google-auth library in python environment

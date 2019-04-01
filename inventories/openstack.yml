@@ -1,0 +1,3 @@
+plugin: openstack
+# openstack inventory plugin inventory, partial example
+# openstacksdk must be installed in venv to successfully use plugin

@@ -1,0 +1,3 @@
+plugin: vmware_vm_inventory
+# vmware inventory plugin inventory, partial example
+# PyVmomi, requests>=2.3, vsphere, vcloud must be installed in venv to successfully use plugin
