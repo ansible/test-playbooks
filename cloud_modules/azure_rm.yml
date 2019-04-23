@@ -1,0 +1,31 @@
+---
+- name: Create and remove an Azure virtual machine
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+    - name: Create VM
+      azure_rm_virtualmachine:
+        admin_username: "{{ admin_username | default('tower-qe') }}"
+        admin_password: "{{ admin_password | default('YouSh@llNotPas5') }}"
+        resource_group: "{{ resource_group | default('qe') }}"
+        name: "{{ vm_name | default('tower-qe-test-vm') }}"
+        virtual_network: "{{ virtual_network | default('qe-vnet') }}"
+        subnet: "{{ subnet | default('default') }}"
+        vm_size: "{{ vm_size | default('Standard_B1ls') }}"
+        image:
+          offer: CentOS
+          publisher: OpenLogic
+          sku: '7.1'
+          version: latest
+      tags:
+        - azure
+
+    - name: Remove VM
+      azure_rm_virtualmachine:
+        resource_group: "{{ resource_group | default('qe') }}"
+        name: "{{ vm_name | default('tower-qe-test-vm') }}"
+        state: absent
+      tags:
+        - azure
