@@ -18,10 +18,10 @@
     tower_job_status_dir: /var/lib/awx/job_status
 
   tasks:
-    - command: find {{tower_tmp_dirs|join(' ')}} -mindepth 1 -maxdepth 1 -type d -regex '.*ansible_tower.*\|.*awx_proot.*'
+    - command: find {{tower_tmp_dirs|join(' ')}} -mindepth 1 -maxdepth 1 -type d -regex '.*awx_.*_.*'
       register: result
     - debug: var=result
-    - name: assert that only one ansible_tower_XXXXX tempfile is visible
+    - name: assert that only one awx_.*_.* tempfile is visible
       assert:
         that:
           - 'result.rc == 0'
