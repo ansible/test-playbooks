@@ -28,3 +28,4 @@
     - debug: var=first
     - debug: var=second
     - debug: var=dotted
+      when: with_dotted | default(false) | bool
