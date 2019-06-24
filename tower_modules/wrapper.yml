@@ -6,7 +6,7 @@
     tower_username: "{{ lookup('ENV', 'TOWER_USERNAME') }}"
     tower_password: "{{ lookup('ENV', 'TOWER_PASSWORD') }}"
   collections:
-    - ansible.tower
+    - chrismeyersfsu.tower_modules
   tasks:
     - name: "Invoke tests for tower module {{ tower_module_under_test }}"
       include_tasks: "tower_{{ tower_module_under_test }}/tasks/main.yml"
