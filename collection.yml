@@ -1,0 +1,6 @@
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: "invoke the tower_organization module that lives in the collection"
+      chrismeyersfsu.tower_modules.tower_organization:
+        name: "Default"
