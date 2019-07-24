@@ -6,3 +6,11 @@
     msg: 'hello'
   tasks:
     - debug: var=msg
+
+    - name: cat file
+      delegate_to: localhost
+      command: "cat README.md"
+      register: readme_contents
+
+    - assert:
+        that: "'testing specifying project branch on Job Templates' in readme_contents.stdout"
