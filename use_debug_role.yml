@@ -1,0 +1,25 @@
+---
+- hosts: all
+  connection: local
+  gather_facts: false
+  vars:
+    # this variable will be used to confirm the variables dump
+    search_for_this_variable: egFZeAJeG6
+    # this variable assures that in the JSON structure,
+    # the prior variable has a comma at the end of it
+    variable_after_that_aphabetically: 3
+
+  roles:
+    - role: grog.debug-variable
+
+  tasks:
+    # task verifies that role ran and dumped variables
+    - name: verify_vars_dumped
+      lineinfile:
+        path: /tmp/ansible.dump
+        # role dumps all variables, but we just search for specific above one
+        line: '    "search_for_this_variable": "egFZeAJeG6",'
+        state: present
+      check_mode: true
+      register: is_created
+      failed_when: is_created is changed
