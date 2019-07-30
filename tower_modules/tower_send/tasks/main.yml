@@ -44,6 +44,11 @@
     that:
       - "result is changed"
 
+- name: Ensure the organization is not created
+  tower_organization:
+    name: "Red Hat"
+    state: absent
+
 - name: Create organization json
   set_fact:
     organization:
