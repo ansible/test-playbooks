@@ -1,7 +1,0 @@
----
-- hosts: all
-  tasks:
-    - command: 'cat {{ file_to_cat|default(ansible_env.AP_FILE_TO_CAT) }}'
-      register: cat
-    - debug:
-       var: cat

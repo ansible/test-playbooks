@@ -1,6 +1,0 @@
----
-- name: 'Test that curly braces "{" in task names'
-  hosts: all
-  tasks:
-    - name: "Username is '{{username | default(ansible_env['SUDO_USER'])}}'"
-      debug: msg="{{ansible_env['SUDO_USER']}}"
