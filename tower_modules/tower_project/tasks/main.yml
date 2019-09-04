@@ -26,25 +26,6 @@
     that:
       - "result is changed"
 
-- name: Generate manual project dir name
-  set_fact:
-    project_dir_name: "proj_{{ lookup('randstr') }}"
-
-- name: create a project directory for manual project
-  import_tasks: create_project_dir.yml
-
-- name: Create a manual project
-  tower_project:
-    name: "manual project {{ lookup('randstr') }}"
-    organization: Default
-    scm_type: manual
-    local_path: "{{ project_dir_name }}"
-  register: result
-
-- assert:
-    that:
-      - "result is changed"
-
 - name: Create a git project without credentials
   tower_project:
     name: git project
