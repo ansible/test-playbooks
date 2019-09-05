@@ -23,7 +23,7 @@
 
 - name: Delete a manual project
   tower_project:
-    name: "{{ tower_project_manual }}"
+    name: "{{ project_name }}"
     state: absent
   register: result
 
