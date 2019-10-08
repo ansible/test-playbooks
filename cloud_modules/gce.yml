@@ -8,9 +8,11 @@
     region: "us-east1"
     allow_errors: False
   tasks:
-    - google.cloud.gce:
-        instance_names: "this-is-an-instance-created-by-tower-qa-tests"  # should not match anything
+    - google.cloud.gcp_compute_instance:
+        hostname: "this-is-an-instance-created-by-tower-qa-tests"  # should not match anything
         state: "{{ state }}"
+        zone: us-east1-d
+        auth_kind: serviceaccount
       ignore_errors: "{{ allow_errors | bool }}"
     - google.cloud.gcp_storage_bucket:
         name: "qe-storage-bucket"
