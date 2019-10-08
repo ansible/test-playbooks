@@ -9,7 +9,7 @@
     allow_errors: False
   tasks:
     - google.cloud.gcp_compute_instance:
-        hostname: "this-is-an-instance-created-by-tower-qa-tests"  # should not match anything
+        name: "this-is-an-instance-created-by-tower-qa-tests"  # should not match anything
         state: "{{ state }}"
         zone: us-east1-d
         auth_kind: serviceaccount
