@@ -1,2 +1,0 @@
-- name: debug who I am
-  debug: msg="this is role_a but it is living in collection b.b"
