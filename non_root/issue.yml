@@ -6,5 +6,7 @@
   roles:
     - name: test_collection:a.a
       role: a.a.role_a
+    - name: test_collection:b.b
+      role: b.b.role_a
     - name: test_role:role_a
       role: role_a
