@@ -1,0 +1,10 @@
+---
+- hosts: all
+  connection: local
+  gather_facts: false
+
+  roles:
+    - name: test_collection:a.a
+      role: a.a.role_a
+    - name: test_role:role_a
+      role: role_a

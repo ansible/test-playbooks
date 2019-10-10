@@ -1,0 +1,2 @@
+- name: announce that this is an ordinary role
+  debug: msg="this is from role_a which is not in a collection"

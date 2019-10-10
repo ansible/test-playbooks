@@ -1,0 +1,2 @@
+- name: debug variable in collection b.b
+  debug: msg="debug_for_collectionb_275KQmfb90"

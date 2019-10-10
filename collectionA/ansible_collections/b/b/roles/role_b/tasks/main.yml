@@ -1,0 +1,2 @@
+- name: debug in the wrong place
+  debug: msg="this_should_not_be_printed"

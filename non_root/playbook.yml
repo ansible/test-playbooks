@@ -1,0 +1,14 @@
+---
+- hosts: all
+  connection: local
+  gather_facts: false
+
+  roles:
+    - name: test_collection:a.a
+      role: a.a.role_a
+    - name: test_collection:b.b
+      role: b.b.role_b
+    - name: test_role:utf-8
+      role: utf-8-䉪ቒ칸ⱷꯔ噂폄蔆㪗輥
+    - name: test_role:role_a
+      role: role_a
