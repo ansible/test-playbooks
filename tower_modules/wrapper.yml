@@ -5,8 +5,9 @@
     tower_host: "{{ lookup('ENV', 'TOWER_HOST') }}"
     tower_username: "{{ lookup('ENV', 'TOWER_USERNAME') }}"
     tower_password: "{{ lookup('ENV', 'TOWER_PASSWORD') }}"
+    collection_id: awx.awx
   collections:
-    - chrismeyersfsu.tower_modules
+    - "{{ collection_id }}"
   tasks:
     - name: "Invoke tests for tower module {{ tower_module_under_test }}"
       include_tasks: "tower_{{ tower_module_under_test }}/tasks/main.yml"
