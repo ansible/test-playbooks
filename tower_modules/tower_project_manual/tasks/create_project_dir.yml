@@ -1,8 +1,8 @@
 - name: Fetch project_base_dir
   uri:
-    url: "{{ tower_host}}/api/v2/config/"
-    user: "{{ tower_username }}"
-    password: "{{ tower_password }}"
+    url: "{{ lookup('ENV', 'TOWER_HOST') }}/api/v2/config/"
+    user: "{{ lookup('ENV', 'TOWER_USERNAME') }}"
+    password: "{{ lookup('ENV', 'TOWER_PASSWORD') }}"
     validate_certs: false
     return_content: true
     force_basic_auth: true
