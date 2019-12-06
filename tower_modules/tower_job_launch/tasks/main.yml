@@ -72,7 +72,7 @@
     job_type: run
     state: present
     inventory: "Demo Inventory"
-    extra_vars: { 'msg': 'foo' }
+    extra_vars: "{{ lookup('file', '{{ playbook_dir }}/tower_job_launch/files/vars.yml') | from_yaml }}"
   register: result
 
 - name: Launch job template with inventory and credential for prompt on launch
