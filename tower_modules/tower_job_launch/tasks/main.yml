@@ -56,3 +56,40 @@
     that:
       - "result is changed"
       - "result.status == 'pending'"
+
+- name: Create a project for testing extra_vars
+  tower_project:
+    name: test-playbooks
+    organization: Default
+    scm_type: git
+    scm_url: https://github.com/ansible/test-playbooks
+
+- name: Create a Job Template for testing extra_vars
+  tower_job_template:
+    name: "Demo Job Template - extra_vars"
+    project: test-playbooks
+    playbook: debug.yml
+    job_type: run
+    state: present
+    inventory: "Demo Inventory"
+    extra_vars: { 'msg': 'foo' }
+  register: result
+
+- name: Launch job template with inventory and credential for prompt on launch
+  tower_job_launch:
+    job_template: "Demo Job Template - extra_vars"
+  register: result
+
+- assert:
+    that:
+      - "result is changed"
+      - "result.status == 'pending'"
+
+- name: Get the job
+  tower_job_list:
+    query: {"id": "{{result.id}}" }
+  register: result
+
+- assert:
+    that:
+      - '{"msg": "foo"} | to_json in result.results[0].extra_vars'
