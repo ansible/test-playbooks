@@ -6,4 +6,4 @@
   vars:
     msg: 'hello'
   tasks:
-    - debug: var=msg
+    - command: 'ansible-playbook -i localhost, debug.yml'
