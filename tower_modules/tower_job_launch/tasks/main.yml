@@ -83,7 +83,7 @@
 - assert:
     that:
       - "result is changed"
-      - "result.status == 'pending'"
+      - "result.status == 'pending' or result.status == 'waiting'"
 
 - name: Get the job
   tower_job_list:
