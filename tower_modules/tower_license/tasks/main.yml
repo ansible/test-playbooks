@@ -1,0 +1,9 @@
+---
+- name: Set license file
+  tower_license:
+    tower_host: [TOWER HOST]
+    tower_username: [USERNAME]
+    tower_password: [PASSWORD]
+    validate_certs: False
+    data: "{{ lookup('template', '/Users/path_to_file/license.txt', convert_data=True) }}"
+    eula_accepted: True
