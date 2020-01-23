@@ -18,3 +18,22 @@
 - assert:
     that:
       - "{{ matching_jobs.count }} == 1"
+
+- name: List failed jobs (which don't exist)
+  tower_job_list:
+    status: failed
+    query: {"id": "{{ job.id }}"}
+  register: successful_jobs
+
+- assert:
+    that:
+      - "{{ successful_jobs.count }} == 0"
+
+- name: Get ALL result pages!
+  tower_job_list:
+    all_pages: True
+  register: all_page_query
+
+- assert:
+    that:
+      - "{{ all_page_query.count }} == {{ all_page_query.results | length() }}"
