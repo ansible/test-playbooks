@@ -73,4 +73,5 @@
 
 - assert:
     that:
+      # - "result.msg =='Failed to update inventory, organization not found: The requested object could not be found.'" 
       - "result.msg =='The organizations test-non-existing-org was not found on the Tower server'"

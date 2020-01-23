@@ -1,13 +1,102 @@
-- name: confirm Tower version w/ check mode
+- name: "Make sure or {{ org_name }} is not there"
   tower_organization:
-    name: Default
-  check_mode: yes
+    name: "{{ org_name }}"
+    state: absent
+  register: result
+
+- name: "Create a new organization"
+  tower_organization:
+    name: "{{ org_name }}"
+  register: result
+
+- assert:
+    that: "result is changed"
+
+- name: "Make sure making the same org is not a change"
+  tower_organization:
+    name: "{{ org_name }}"
   register: result
 
 - assert:
     that:
-      - "result.tower_version is defined"
+      - "result is not changed"
 
-- name: Make sure the default Default organization exists
+- name: "Try adding a bad custom_virtualenv"
   tower_organization:
-    name: Default
+    name: "{{ org_name }}"
+    custom_virtualenv: "/does/not/exit"
+  register: result
+  ignore_errors: True
+
+- assert:
+    that:
+      - "result is failed"
+      - "'is not a valid virtualenv in' in result['response']['json']['custom_virtualenv'][0]"
+
+- name: "Try to pass an invalid value as max_hosts"
+  tower_organization:
+    name: "{{ org_name }}"
+    max_hosts: "a"
+  register: result
+  ignore_errors: True
+
+- assert:
+    that:
+      - "result is failed"
+      - "'Unable to convert max_hosts to an integer' in result.msg"
+
+- name: "Pass in all parameters"
+  tower_organization:
+    name: "{{ org_name }}"
+    description: "A description"
+    max_hosts: "1"
+    custom_virtualenv: ""
+  register: result
+
+- assert:
+    that:
+      - "result is changed"
+
+- name: "Change the description"
+  tower_organization:
+    name: "{{ org_name }}"
+    description: "A new description"
+    max_hosts: "1"
+    custom_virtualenv: ""
+  register: result
+
+- assert:
+    that:
+      - "result is changed"
+
+- name: "Change the max_hosts"
+  tower_organization:
+    name: "{{ org_name }}"
+    description: "A new description"
+    max_hosts: "0"
+    custom_virtualenv: ""
+  register: result
+
+- assert:
+    that:
+      - "result is changed"
+
+- name: "Remove the organization"
+  tower_organization:
+    name: "{{ org_name }}"
+    state: absent
+  register: result
+
+- assert:
+    that:
+      - "result is changed"
+
+- name: "Remove a missing organization"
+  tower_organization:
+    name: "{{ org_name }}"
+    state: absent
+  register: result
+
+- assert:
+    that:
+      - "result is not changed"

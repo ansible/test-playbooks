@@ -9,7 +9,8 @@
 - name: Assert a meaningful error was provided for the failed Tower team creation
   assert:
     that:
-      - "'The requested object could not be found.' in result.msg"
+      - result is failed
+      - "'The organizations Missing Organization was not found on the Tower server' in result.msg"
 
 - name: Create a Tower team
   tower_team:
@@ -42,4 +43,4 @@
 
 - assert:
     that:
-      - "result.msg =='Failed to update team, organization not found: The requested object could not be found.'"
+      - "'The organizations Non Existing Org was not found on the Tower server' in result.msg"
