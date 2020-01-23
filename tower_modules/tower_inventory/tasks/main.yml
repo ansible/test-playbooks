@@ -74,4 +74,5 @@
 - assert:
     that:
       - "result is not changed"
-      - "'not found' in result.msg"
+      - "result.msg =='Failed to update inventory, organization not found: The requested object could not be found.'
+        or result.msg =='The organizations test-non-existing-org was not found on the Tower server'"
