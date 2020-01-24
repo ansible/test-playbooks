@@ -1,41 +1,80 @@
+- name: Set the value of AWX_PROOT_SHOW_PATHS to a baseline
+  tower_settings:
+    name: "AWX_PROOT_SHOW_PATHS"
+    value: '["/var/lib/awx/projects/"]'
+
+- name: Set the value of AWX_PROOT_SHOW_PATHS to get an error back from Tower
+  tower_settings:
+    settings:
+      AWX_PROOT_SHOW_PATHS:
+        'not': 'a valid'
+        'tower': 'setting'
+  register: result
+  ignore_errors: True
+
+- assert:
+    that:
+      - "result is failed"
+      - "'Expected a list of items but got type' in result['response']['json']['AWX_PROOT_SHOW_PATHS'][0]"
+
 - name: Set the value of AWX_PROOT_SHOW_PATHS
   tower_settings:
     name: "AWX_PROOT_SHOW_PATHS"
-    value:
-      - '/var/lib/awx/projects/'
-      - '/tmp'
+    value: "'/var/lib/awx/projects/', '/tmp'"
   register: result
 
 - assert:
     that:
       - "result is changed"
 
-- name: Revert the value of AWX_PROOT_SHOW_PATHS to its default
-  tower_settings:
-    name: "AWX_PROOT_SHOW_PATHS"
-    value: []
-  register: result
-
-- assert:
-    that:
-      - "result is changed"
-
-- name: Set the value of AWX_PROOT_BASE_PATH
-  tower_settings:
-    name: AWX_PROOT_BASE_PATH
-    value: "/tmp/newtmp"
-  register: result
-
-- assert:
-    that:
-      - "result.value == '/tmp/newtmp'"
-
-- name: Revert the value of AWX_PROOT_BASE_PATH to its default
+- name: Attempt to set the value of AWX_PROOT_BASE_PATH to what it already is
   tower_settings:
     name: AWX_PROOT_BASE_PATH
     value: "/tmp"
   register: result
 
+- debug:
+    msg: "{{ result }}"
+
 - assert:
     that:
-      - "result.value == '/tmp'"
+      - "result is not changed"
+
+- name: Apply a single setting via settings
+  tower_settings:
+    settings:
+        AWX_PROOT_SHOW_PATHS:
+          - '/var/lib/awx/projects/'
+  register: result
+
+- assert:
+    that:
+      - "result is changed"
+
+- name: Apply multiple setting via settings with no change
+  tower_settings:
+    settings:
+        AWX_PROOT_SHOW_PATHS:
+          - '/var/lib/awx/projects/'
+        AWX_PROOT_BASE_PATH: "/tmp"
+  register: result
+
+- debug:
+    msg: "{{ result }}"
+
+- assert:
+    that:
+      - "result is not changed"
+
+- name: Apply multiple setting via settings with change
+  tower_settings:
+    settings:
+        AWX_PROOT_SHOW_PATHS:
+          - '/var/lib/awx/projects/'
+          - '/tmp'
+        AWX_PROOT_BASE_PATH: "/tmp"
+  register: result
+
+- assert:
+    that:
+      - "result is changed"

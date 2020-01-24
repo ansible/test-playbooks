@@ -26,6 +26,21 @@
     that:
       - "result is changed"
 
+- name: Create a project directory for manual project
+  import_tasks: create_project_dir.yml
+
+- name: Create a manual project
+  tower_project:
+    name: manual project
+    organization: Default
+    scm_type: manual
+    local_path: "manual_test_project"
+  register: result
+
+- assert:
+    that:
+      - "result is changed"
+
 - name: Create a git project without credentials
   tower_project:
     name: git project
@@ -40,7 +55,7 @@
     - TestOrg1
     - TestOrg2
 
-- name: "Create credential"
+- name: Create credential
   tower_credential:
     kind: scm
     name: TestCred1
@@ -48,10 +63,6 @@
   loop:
     - TestOrg2
     - TestOrg1
-
-- name: Generate random project name appender
-  set_fact:
-    project_name_rand: "{{ lookup('randstr') }}"
 
 - name: Create project TestProject
   tower_project:
@@ -78,7 +89,7 @@
 
 - assert:
     that:
-      - "result.msg == 'Failed to update project, organization not found: Non Existing Org'"
+      - "'Failed to update project, organization not found: Non Existing Org' in result.msg"
 
 - name: Check module fails with correct msg
   tower_project:
@@ -92,4 +103,4 @@
 
 - assert:
     that:
-      - "result.msg =='Failed to update project, credential not found: Non Existing Credential'"
+      - "'Failed to update project, credential not found: Non Existing Credential' in result.msg"
