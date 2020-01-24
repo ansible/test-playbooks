@@ -49,6 +49,10 @@
     - TestOrg2
     - TestOrg1
 
+- name: Generate random project name appender
+  set_fact:
+    project_name_rand: "{{ lookup('randstr') }}"
+
 - name: Create project TestProject
   tower_project:
     name: "TestProject {{ project_name_rand }}"
