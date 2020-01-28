@@ -24,9 +24,9 @@
     state: present
   register: result
 
-  - assert:
-      that:
-        - "result is not changed"
+- assert:
+    that:
+      - "result is not changed"
 
 - name: Fail Change Regular to Smart
   tower_inventory:
@@ -38,7 +38,7 @@
 
 - assert:
     that:
-      - "result.msg =='You cannot turn a regular inventory into a \"smart\" inventory.'"
+      - "result is failed"
 
 - name: Delete an Inventory
   tower_inventory:

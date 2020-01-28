@@ -1,54 +1,50 @@
+- name: Delete old TestProject test project
+  tower_project:
+    name: TestProject
+    organization: TestOrg1
+    state: absent
+  ignore_errors: True
+
+- name: Delete old git project from previous test runs
+  tower_project:
+    name: "git project"
+    organization: Default
+    state: absent
+  ignore_errors: True
+
 - name: Create an SCM Credential
   tower_credential:
     name: SCM Credential for Project
     organization: Default
     kind: scm
 
-- name: Create a Project
+- name: Create a git project without credentials without waiting
   tower_project:
-    name: my-project
-    organization: Default
-    state: present
-    scm_credential: SCM Credential for Project
-  register: result
-
-- assert:
-    that:
-      - "result is changed"
-
-- name: Delete a Project
-  tower_project:
-    name: my-project
-    state: absent
-  register: result
-
-- assert:
-    that:
-      - "result is changed"
-
-- name: Create a project directory for manual project
-  import_tasks: create_project_dir.yml
-
-- name: Create a manual project
-  tower_project:
-    name: manual project
-    organization: Default
-    scm_type: manual
-    local_path: "manual_test_project"
-  register: result
-
-- assert:
-    that:
-      - "result is changed"
-
-- name: Create a git project without credentials
-  tower_project:
-    name: git project
+    name: "git project"
     organization: Default
     scm_type: git
     scm_url: https://github.com/ansible/ansible
+    wait: False
+  register: result
 
-- name: "Create {{ item }}"
+- assert:
+    that:
+      - result is changed
+
+- name: Recreate the project to validate not changed
+  tower_project:
+    name: 'git project'
+    organization: Default
+    scm_type: git
+    scm_url: https://github.com/ansible/ansible
+    wait: True
+  register: result
+
+- assert:
+    that:
+      - result is not changed
+
+- name: Create organizations
   tower_organization:
     name: "{{ item }}"
   loop:
@@ -63,6 +59,11 @@
   loop:
     - TestOrg2
     - TestOrg1
+  register: new_credentials
+
+- name: Generate random project name appender
+  set_fact:
+    project_name_rand: "{{ lookup('randstr') }}"
 
 - name: Create project TestProject
   tower_project:
@@ -71,11 +72,11 @@
     scm_type: git
     scm_url: "https://github.com/ansible/ansible"
     scm_credential: TestCred1
-  register: multi_org_cred_project
+  register: result
 
 - assert:
     that:
-      - "multi_org_cred_project is changed"
+      - "result is changed"
 
 - name: Check module fails with correct msg
   tower_project:
@@ -89,7 +90,8 @@
 
 - assert:
     that:
-      - "'Failed to update project, organization not found: Non Existing Org' in result.msg"
+      - "result.msg == 'The organizations Non-Existing Org was not found on the Tower server' or
+        result.msg == 'Failed to update project, organization not found: Non Existing Org'"
 
 - name: Check module fails with correct msg
   tower_project:
@@ -103,4 +105,11 @@
 
 - assert:
     that:
-      - "'Failed to update project, credential not found: Non Existing Credential' in result.msg"
+      - "result.msg =='The credentials Non Existing Credential was not found on the Tower server' or
+        result.msg =='Failed to update project, credential not found: Non Existing Credential'"
+
+- name: Delete a project
+  tower_project:
+    name: "{{ project_name }}"
+    organization: TestOrg1
+    state: absent
