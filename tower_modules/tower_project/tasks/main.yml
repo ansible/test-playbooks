@@ -110,6 +110,6 @@
 
 - name: Delete a project
   tower_project:
-    name: "{{ project_name }}"
+    name: TestProject
     organization: TestOrg1
     state: absent
