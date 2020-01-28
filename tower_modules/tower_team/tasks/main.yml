@@ -11,7 +11,7 @@
     that:
       - result is failed
       - "result.msg =='Failed to update team, organization not found: The requested object could not be found.' or
-      result.msg =='The organizations Missing Organization was not found on the Tower server'"
+        result.msg =='The organizations Missing Organization was not found on the Tower server'"
 
 - name: Create a Tower team
   tower_team:
@@ -44,5 +44,5 @@
 
 - assert:
     that:
-      - "result.msg =='Failed to update team, organization not found: The requested object could not be found.'
-      or result.msg =='The organizations Non Existing Org was not found on the Tower server'"
+      - "result.msg =='Failed to update team, organization not found: The requested object could not be found.' or
+        result.msg =='The organizations Non Existing Org was not found on the Tower server'"
