@@ -31,19 +31,6 @@
     that:
       - result is changed
 
-# This should fail because it's currently updating
-- name: Try to delete the project right away
-  tower_project:
-    name: "git project"
-    organization: Default
-    state: absent
-  register: result
-  ignore_errors: True
-
-- assert:
-    that:
-      - result is failed
-
 - name: Recreate the project to validate not changed
   tower_project:
     name: 'git project'
@@ -103,8 +90,8 @@
 
 - assert:
     that:
-      - "result.msg == 'The organizations Non-Existing Org was not found on the Tower server'
-      or result.msg == 'Failed to update project, organization not found: Non Existing Org'"
+      - "result.msg == 'The organizations Non-Existing Org was not found on the Tower server' or
+        result.msg == 'Failed to update project, organization not found: Non Existing Org'"
 
 - name: Check module fails with correct msg
   tower_project:
@@ -119,7 +106,7 @@
 - assert:
     that:
       - "result.msg =='The credentials Non Existing Credential was not found on the Tower server' or
-      result.msg =='Failed to update project, credential not found: Non Existing Credential'"
+        result.msg =='Failed to update project, credential not found: Non Existing Credential'"
 
 - name: Delete a project
   tower_project:
