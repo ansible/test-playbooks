@@ -2,9 +2,9 @@
 - hosts: localhost
   gather_facts: false
   vars:
-    tower_host: "{{ lookup('ENV', 'TOWER_HOST') }}"
-    tower_username: "{{ lookup('ENV', 'TOWER_USERNAME') }}"
-    tower_password: "{{ lookup('ENV', 'TOWER_PASSWORD') }}"
+    tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
   collections:
     - ansible_tower.tower_modules
   tasks:
