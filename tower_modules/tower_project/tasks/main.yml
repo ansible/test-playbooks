@@ -1,11 +1,4 @@
-- name: Delete old TestProject test project
-  tower_project:
-    name: TestProject
-    organization: TestOrg1
-    state: absent
-  ignore_errors: True
-
-- name: Delete old git project from previous test runs
+- name: Delete old git project from any previous test runs
   tower_project:
     name: "git project"
     organization: Default
@@ -65,7 +58,7 @@
   set_fact:
     project_name_rand: "{{ lookup('randstr') }}"
 
-- name: Create project TestProject
+- name: Create a new test project
   tower_project:
     name: "TestProject {{ project_name_rand }}"
     organization: TestOrg1
@@ -108,8 +101,8 @@
       - "result.msg =='The credentials Non Existing Credential was not found on the Tower server' or
         result.msg =='Failed to update project, credential not found: Non Existing Credential'"
 
-- name: Delete a project
+- name: Delete the test project
   tower_project:
-    name: "{{ project_name }}"
+    name: "TestProject {{ project_name_rand }}"
     organization: TestOrg1
     state: absent
