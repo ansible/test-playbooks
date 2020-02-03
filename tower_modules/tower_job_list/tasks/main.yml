@@ -36,4 +36,4 @@
 
 - assert:
     that:
-      - "{{ all_page_query.count }} == {{ all_page_query.results | length() }}"
+      - 'not all_page_query.next'
