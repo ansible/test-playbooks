@@ -1,8 +1,6 @@
 - name: Launch a Job Template
   tower_job_launch:
     job_template: "Demo Job Template"
-    inventory: "Demo Inventory"
-    credential: "Demo Credential"
   register: result
 
 - assert:
@@ -32,7 +30,8 @@
 
 - assert:
     that:
-      - "result.msg =='Unable to launch job, job_template/Non Existing Job Template was not found: The requested object could not be found.'"
+      - "result.msg =='Unable to launch job, job_template/Non Existing Job Template was not found: The requested object could not be found.'
+        or result.msg == 'The inventories Test Inventory was not found on the Tower server'"
 
 - name: Create a Job Template for testing prompt on launch
   tower_job_template:
@@ -72,7 +71,8 @@
     job_type: run
     state: present
     inventory: "Demo Inventory"
-    extra_vars: "{{ lookup('file', '{{ playbook_dir }}/tower_job_launch/files/vars.yml') | from_yaml }}"
+    extra_vars:
+      foo: bar
   register: result
 
 - name: Launch job template with inventory and credential for prompt on launch
@@ -91,4 +91,11 @@
 
 - assert:
     that:
-      - '{"msg": "foo"} | to_json in result.results[0].extra_vars'
+      - '{"foo": "bar"} | to_json in result.results[0].extra_vars'
+
+- name: Delete the job
+  tower_project:
+    name: "Demo Job Template - extra_vars"
+    organization: Default
+    state: absent
+  ignore_errors: True
