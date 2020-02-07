@@ -1,4 +1,3 @@
----
 - name: Add a Tower credential
   tower_credential:
     description: Credentials for Openstack Test project
@@ -14,8 +13,8 @@
 - name: Add a Tower inventory
   tower_inventory:
     description: Test inventory
-    name: openstack-test-inventory
     organization: Default
+    name: openstack-test-inventory
 
 - name: Create a source inventory
   tower_inventory_source:
@@ -25,10 +24,25 @@
     credential: openstack-test-credential
     overwrite: True
     update_on_launch: True
-    source_vars: "---\nprivate: false"
+    source_vars:
+      private: false
     source: openstack
   register: result
 
 - assert:
     that:
       - "result is changed"
+
+- name: Delete the source inventory
+  tower_inventory_source:
+    name: "{{ result.name }}"
+    description: Source for Test inventory
+    inventory: openstack-test-inventory
+    credential: openstack-test-credential
+    overwrite: True
+    update_on_launch: True
+    source_vars:
+      private: false
+    source: openstack
+    state: absent
+  ignore_errors: True
