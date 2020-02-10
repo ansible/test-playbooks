@@ -1,4 +1,4 @@
-- name: "Make sure or {{ org_name }} is not there"
+- name: "Make sure {{ org_name }} is not there"
   tower_organization:
     name: "{{ org_name }}"
     state: absent
@@ -31,25 +31,23 @@
 - assert:
     that:
       - "result is failed"
-      - "'is not a valid virtualenv in' in result['response']['json']['custom_virtualenv'][0]"
 
 - name: "Try to pass an invalid value as max_hosts"
   tower_organization:
     name: "{{ org_name }}"
-    max_hosts: "a"
+    max_hosts: a
   register: result
   ignore_errors: True
 
 - assert:
     that:
       - "result is failed"
-      - "'Unable to convert max_hosts to an integer' in result.msg"
 
 - name: "Pass in all parameters"
   tower_organization:
     name: "{{ org_name }}"
     description: "A description"
-    max_hosts: "1"
+    max_hosts: 1
     custom_virtualenv: ""
   register: result
 
@@ -61,7 +59,7 @@
   tower_organization:
     name: "{{ org_name }}"
     description: "A new description"
-    max_hosts: "1"
+    max_hosts: 1
     custom_virtualenv: ""
   register: result
 
@@ -73,7 +71,7 @@
   tower_organization:
     name: "{{ org_name }}"
     description: "A new description"
-    max_hosts: "0"
+    max_hosts: 5
     custom_virtualenv: ""
   register: result
 
@@ -100,3 +98,46 @@
 - assert:
     that:
       - "result is not changed"
+
+# Test behaviour common to all tower modules
+- name: Check that SSL is available
+  tower_organization:
+    name: Default
+  register: result
+
+- assert:
+    that: result is not changed
+
+- name: Check that SSL is available and verify_ssl is enabled (task must fail)
+  tower_organization:
+    name: Default
+  environment:
+    TOWER_CERTIFICATE: /dev/null  # force check failure
+    TOWER_VERIFY_SSL: True
+  ignore_errors: true
+  register: check_ssl_is_used
+
+- name: Check that connection failed
+  assert:
+    that:
+      - check_ssl_is_used is failed
+
+- name: Disable verify_ssl in ~/.tower_cli.cfg
+  copy:
+    dest: ~/.tower_cli.cfg
+    content: |
+      [general]
+      verify_ssl = False
+    force: false  # ensure remote file doesn't exist
+
+- block:
+  - name: Check that verify_ssl is disabled (task must not fail)
+    tower_organization:
+      name: Default
+    environment:
+      TOWER_CERTIFICATE: /dev/null  # should not fail because verify_ssl is disabled
+always:
+  - name: Delete ~/.tower_cli.cfg
+    file:
+      path: ~/.tower_cli.cfg
+      state: absent
