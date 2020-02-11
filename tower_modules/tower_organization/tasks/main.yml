@@ -36,22 +36,10 @@
     that:
       - "result is failed"
 
-- name: "Try to pass an invalid value as max_hosts"
-  tower_organization:
-    name: "{{ org_name }}"
-    max_hosts: a
-  register: result
-  ignore_errors: True
-
-- assert:
-    that:
-      - "result is failed"
-
 - name: "Pass in all parameters"
   tower_organization:
     name: "{{ org_name }}"
     description: "A description"
-    max_hosts: 1
     custom_virtualenv: ""
   register: result
 
@@ -63,19 +51,6 @@
   tower_organization:
     name: "{{ org_name }}"
     description: "A new description"
-    max_hosts: 1
-    custom_virtualenv: ""
-  register: result
-
-- assert:
-    that:
-      - "result is changed"
-
-- name: "Change the max_hosts"
-  tower_organization:
-    name: "{{ org_name }}"
-    description: "A new description"
-    max_hosts: 5
     custom_virtualenv: ""
   register: result
 
