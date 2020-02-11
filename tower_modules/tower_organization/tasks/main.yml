@@ -1,4 +1,8 @@
-- name: "Make sure {{ org_name }} is not there"
+- name: Generate an org name
+  set_fact:
+    org_name: "org-{{ lookup('randstr') }}"
+
+- name: Make sure {{ org_name }} is not there
   tower_organization:
     name: "{{ org_name }}"
     state: absent
@@ -136,8 +140,8 @@
       name: Default
     environment:
       TOWER_CERTIFICATE: /dev/null  # should not fail because verify_ssl is disabled
-always:
-  - name: Delete ~/.tower_cli.cfg
-    file:
-      path: ~/.tower_cli.cfg
-      state: absent
+  always:
+    - name: Delete ~/.tower_cli.cfg
+      file:
+        path: ~/.tower_cli.cfg
+        state: absent
