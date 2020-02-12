@@ -24,7 +24,6 @@
     name: Some Group
     inventory: "{{ inv_name }}"
     state: present
-    source: ec2
     variables: "@{{ tempdir.stdout }}/vars"
   register: result
 
@@ -54,4 +53,5 @@
 
 - assert:
     that:
-      - "result.msg =='Failed to update the group, inventory not found: The requested object could not be found.'"
+      - "result.msg =='Failed to update the group, inventory not found: The requested object could not be found.' or
+        result.msg =='The inventories test-non-existing-inventory was not found on the Tower server'"

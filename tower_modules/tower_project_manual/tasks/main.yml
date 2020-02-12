@@ -24,6 +24,7 @@
 - name: Delete a manual project
   tower_project:
     name: "{{ project_name }}"
+    organization: Default
     state: absent
   register: result
 

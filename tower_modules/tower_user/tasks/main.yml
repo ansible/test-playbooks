@@ -91,4 +91,4 @@
 - assert:
     that:
       - "result.msg =='Unable to resolve tower_host ([Errno 8] nodename nor servname provided, or not known): foo.invalid' or
-        'not verify ssl with non-https protocol' in result.exception"
+        'Can not verify ssl with non-https protocol' in result.exception"

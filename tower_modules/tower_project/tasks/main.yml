@@ -26,7 +26,7 @@
 
 - name: Recreate the project to validate not changed
   tower_project:
-    name: 'git project'
+    name: "git project"
     organization: Default
     scm_type: git
     scm_url: https://github.com/ansible/ansible
@@ -71,7 +71,7 @@
     that:
       - "result is changed"
 
-- name: Check module fails with correct msg
+- name: Check module fails with correct msg when given non-existing org as param
   tower_project:
     name: "TestProject {{ project_name_rand }}"
     organization: Non Existing Org
@@ -86,7 +86,7 @@
       - "result.msg == 'The organizations Non-Existing Org was not found on the Tower server' or
         result.msg == 'Failed to update project, organization not found: Non Existing Org'"
 
-- name: Check module fails with correct msg
+- name: Check module fails with correct msg when given non-existing credential as param
   tower_project:
     name: "TestProject {{ project_name_rand }}"
     organization: TestOrg1
