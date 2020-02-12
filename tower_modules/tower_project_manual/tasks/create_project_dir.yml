@@ -39,7 +39,7 @@
         project_base_dir: "{{ awx_config.json.project_base_dir }}"
       command: tower-cli ad_hoc launch --wait --inventory localhost
         --credential dummy --module-name command
-        --module-args "mkdir -p {{ project_base_dir }}/{{ project_dir_name }}"
+        --module-args "mkdir -p {{ project_base_dir }}/{{ project_dir_name }} || true"
   always:
     - name: enable bubblewrap
       command: tower-cli setting modify AWX_PROOT_ENABLED true
