@@ -15,20 +15,6 @@
     scm_credential: SCM Credential for JT
   register: result
 
-- name: Wait for the project to be status=successful
-  uri:
-    url: "{{ lookup('env', 'TOWER_HOST') }}/api/v2/projects/{{ result.id }}/"
-    method: GET
-    user: "{{ lookup('env', 'TOWER_USERNAME') }}"
-    password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-    validate_certs: false
-    force_basic_auth: true
-    return_content: true
-  register: result
-  until: result.json.summary_fields.last_update is defined and result.json.summary_fields.last_update.status == "successful"
-  retries: 60
-  delay: 1
-
 - name: Create a Job Template
   tower_job_template:
     name: my-job-1
