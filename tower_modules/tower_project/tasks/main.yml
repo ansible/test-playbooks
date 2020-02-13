@@ -39,19 +39,13 @@
 
 - name: Create organizations
   tower_organization:
-    name: "{{ item }}"
-  loop:
-    - TestOrg1
-    - TestOrg2
+    name: TestOrg
 
 - name: Create credential
   tower_credential:
     kind: scm
-    name: TestCred1
-    organization: "{{ item }}"
-  loop:
-    - TestOrg2
-    - TestOrg1
+    name: TestCred
+
   register: new_credentials
 
 - name: Generate random project name appender
@@ -61,10 +55,10 @@
 - name: Create a new test project
   tower_project:
     name: "TestProject {{ project_name_rand }}"
-    organization: TestOrg1
+    organization: TestOrg
     scm_type: git
     scm_url: https://github.com/ansible/test-playbooks
-    scm_credential: "{{ new_credentials.results[0].id | default('TestCred1') }}"
+    scm_credential: TestCred
   register: result
 
 - assert:
@@ -77,7 +71,7 @@
     organization: Non Existing Org
     scm_type: git
     scm_url: https://github.com/ansible/test-playbooks
-    scm_credential: "{{ new_credentials.results[0].id | default('TestCred1') }}"
+    scm_credential: TestCred
   register: result
   ignore_errors: true
 
@@ -89,7 +83,7 @@
 - name: Check module fails with correct msg when given non-existing credential as param
   tower_project:
     name: "TestProject {{ project_name_rand }}"
-    organization: TestOrg1
+    organization: TestOrg
     scm_type: git
     scm_url: https://github.com/ansible/test-playbooks
     scm_credential: Non Existing Credential
@@ -104,5 +98,5 @@
 - name: Delete the test project
   tower_project:
     name: "TestProject {{ project_name_rand }}"
-    organization: TestOrg1
+    organization: TestOrg
     state: absent
