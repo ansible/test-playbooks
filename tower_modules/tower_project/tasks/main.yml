@@ -45,6 +45,7 @@
   tower_credential:
     kind: scm
     name: TestCred
+    organization: TestOrg
 
   register: new_credentials
 
