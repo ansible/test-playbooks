@@ -53,6 +53,15 @@
   set_fact:
     project_name_rand: "{{ lookup('randstr') }}"
 
+- name: Create a new test project in check_mode
+  tower_project:
+    name: "TestProject {{ project_name_rand }}"
+    organization: TestOrg
+    scm_type: git
+    scm_url: https://github.com/ansible/test-playbooks
+    scm_credential: TestCred
+  check_mode: yes
+
 - name: Create a new test project
   tower_project:
     name: "TestProject {{ project_name_rand }}"
@@ -62,6 +71,8 @@
     scm_credential: TestCred
   register: result
 
+# If this fails it may be because the check_mode task actually already created
+# the project, or it could be because the module actually failed somehow
 - assert:
     that:
       - "result is changed"
