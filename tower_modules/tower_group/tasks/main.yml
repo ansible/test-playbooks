@@ -1,14 +1,3 @@
-- name: create a tempdir for hostvars
-  local_action: shell mktemp -d
-  register: tempdir
-
-- name: write a file w/ hostvars
-  local_action:
-    module: lineinfile
-    dest: "{{ tempdir.stdout }}/vars"
-    line: '{"foo": "bar"}'
-    create: true
-
 - name: Generate an inventory name
   set_fact:
     inv_name: "inv-for-group-{{ lookup('randstr') }}"
@@ -24,7 +13,8 @@
     name: Some Group
     inventory: "{{ inv_name }}"
     state: present
-    variables: "@{{ tempdir.stdout }}/vars"
+    variables:
+      foo: bar
   register: result
 
 - assert:
