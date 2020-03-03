@@ -7,3 +7,5 @@
     msg: 'hello'
   tasks:
     - debug: var=msg
+  roles:
+    - name: foo
