@@ -2,3 +2,6 @@
   gather_facts: false
   tasks:
   - include: gen_host_status_base.yml
+    loop:
+      - 1
+      - 2
