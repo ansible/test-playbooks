@@ -6,10 +6,10 @@
   tasks:
   - name: "Use command to run something that should use the yum module"
     command: "yum install -y curl"
-    become: true
+    ignore_errors: true
 
   - yum:
       name: "{{ item }}"
       state: present
     with_items: "{{ items }}"
-    become: true
+    ignore_errors: true
