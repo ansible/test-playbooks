@@ -1,9 +1,10 @@
 - hosts: localhost
   vars:
     items:
-    - a
-    - b
-    - c
+    - vi
+    - curl
   tasks:
-  - debug: msg="{{ item }}"
-    with_items: items
+  - yum:
+      name: "{{ item }}"
+      state: present
+    with_items: "{{ items }}"
