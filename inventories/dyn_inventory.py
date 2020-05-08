@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from argparse import ArgumentParser
-from pprint import pprint
 import json
 
 inventory = {'group_one': {'hosts': ['group_one_host_0{}'.format(i) for i in range(1, 6)]
