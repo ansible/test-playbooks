@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from argparse import ArgumentParser
 from datetime import datetime
+import json
 import os
 
 # This is almost the same as dyn_inventory_test_env.py
@@ -29,7 +30,7 @@ def parse_args():
 def load_inventory():
     args = parse_args()
     if args.list_instances:
-        print(inventory)
+        print(json.dumps(inventory, indent=4))
 
 
 if __name__ == '__main__':

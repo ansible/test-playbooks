@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from argparse import ArgumentParser
-from pprint import pprint
+import json
 
 inventory = {'invalid': True}
 
@@ -11,11 +11,13 @@ def parse_args():
     parser.add_argument('--host', dest='requested_host', help='Get all the variables about a specific instance')
     return parser.parse_args()
 
+def dumps(dct):
+    return json.dumps(dct, sort_keys=True, indent=4, separators=(',', ': '))
 
 def load_inventory():
     args = parse_args()
     if args.list_instances:
-        pprint(inventory)
+        print(dumps(inventory))
 
 
 if __name__ == '__main__':
