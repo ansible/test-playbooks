@@ -1,4 +1,4 @@
-plugin: gcp_compute
+plugin: google.cloud.gcp_compute
 projects:
     - ansible-tower-engineering
 # google cloud inventory plugin inventory, partial example

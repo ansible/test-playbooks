@@ -2,6 +2,8 @@
 - hosts: localhost
   connection: local
   gather_facts: False
+  collections:
+    - google.cloud
   vars:
     state: "absent"
     zone: "us-east1-b"

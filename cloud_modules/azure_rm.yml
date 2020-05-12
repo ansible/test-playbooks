@@ -3,6 +3,8 @@
   hosts: localhost
   connection: local
   gather_facts: False
+  collections:
+    - azure.azcollection
 
   tasks:
     - name: Create VM

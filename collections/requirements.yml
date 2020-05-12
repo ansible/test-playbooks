@@ -1,0 +1,11 @@
+---
+collections:
+  - name: awx.awx
+  - name: azure.azcollection
+  - name: amazon.aws
+  - name: theforeman.foreman
+  - name: google.cloud
+  - name: openstack.cloud
+    version: 0.0.1-dev85
+  - name: community.vmware
+  - name: ovirt.ovirt
