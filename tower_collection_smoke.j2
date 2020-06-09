@@ -1,0 +1,39 @@
+- name: Launch a Job Template
+  {{ collection_id }}.tower_job_launch:
+    job_template: "Demo Job Template"
+  register: job
+
+- assert:
+    that:
+      - "job is changed"
+      - "job.status == 'pending'"
+
+- name: List jobs w/ a matching primary key
+  {{ collection_id }}.tower_job_list:
+    query:
+      id: "{{ '{{' }} job.id {{ '}}' }}"
+  register: matching_jobs
+
+- assert:
+    that:
+      - "{{ '{{' }} matching_jobs.count {{ '}}' }} == 1"
+
+- name: List failed jobs (which don't exist)
+  {{ collection_id }}.tower_job_list:
+    status: failed
+    query: 
+      id: "{{ '{{' }} job.id {{ '}}' }}"
+  register: successful_jobs
+
+- assert:
+    that:
+      - "{{ '{{' }} successful_jobs.count {{ '}}' }} == 0"
+
+- name: Get ALL result pages!
+  {{ collection_id }}.tower_job_list:
+    all_pages: True
+  register: all_page_query
+
+- assert:
+    that:
+      - 'not all_page_query.next'
