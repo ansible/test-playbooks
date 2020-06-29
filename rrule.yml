@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+  - name: Debug using the rrule plugin
+    debug:
+      msg: >
+        {{ query(
+          'awx.awx.tower_schedule_rrule',
+          'minute',
+          start_date='2020-4-16 03:45:07',
+          end_on='2'
+        ) }}
