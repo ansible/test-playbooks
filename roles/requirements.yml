@@ -1,0 +1,7 @@
+## desired, but not possible because lack of support for custom refspecs
+# - src: git+https://github.com/ansible/test-playbooks.git
+#   version: pull/140/head
+
+- src: git+https://github.com/AlanCoding/test-playbooks.git
+  version: local_roles
+  name: remote_test_role

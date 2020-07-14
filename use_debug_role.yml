@@ -1,0 +1,6 @@
+---
+- hosts: all
+  connection: local
+  gather_facts: false
+  roles:
+    - role: remote_test_role
