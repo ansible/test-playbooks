@@ -4,7 +4,7 @@
   gather_facts: false
   tasks:
     - name: Get a list of all pods from any namespace
-      k8s_info:
+      community.kubernetes.k8s_info:
         kind: Pod
         namespace: "{{ namespace }}"
       register: pod_list
