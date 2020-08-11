@@ -1,0 +1,13 @@
+- hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+  - name: Fail and rescue - collection of tasks
+    block:
+      - fail:
+          msg: "HALP!!! time number {{ item }}"
+        loop:
+          - 1
+          - 2
+    rescue:
+      - debug: msg="ε-(´・｀) ﾌ"
