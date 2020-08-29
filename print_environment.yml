@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  gather_facts: false
+  connection: local
+  vars:
+    running_env: []
+  tasks:
+    - command: printenv
+      register: result
+
+    - set_stats:
+        data: 
+          printenv: "{{ result.stdout }}"
