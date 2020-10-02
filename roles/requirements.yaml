@@ -1,0 +1,5 @@
+ 
+# Test requirements file
+
+- src: yatesr.timezone
+- src: grog.debug-variable
