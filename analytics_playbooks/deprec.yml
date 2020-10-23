@@ -1,0 +1,10 @@
+---
+- name: Firewalld
+  hosts: localhost
+  tasks:
+    - firewalld:
+      args:
+        warn: true
+        service: https
+        permanent: yes
+        state: enabled

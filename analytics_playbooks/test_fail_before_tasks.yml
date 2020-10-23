@@ -1,0 +1,6 @@
+---
+- name: Fails before the tasks for trying to import incorrect role
+  gather_facts: False
+  hosts: all
+  roles:
+    - incorrect.role

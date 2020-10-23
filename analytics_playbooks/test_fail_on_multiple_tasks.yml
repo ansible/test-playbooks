@@ -1,0 +1,12 @@
+---
+- name: contains multiple failed tasks
+  gather_facts: False
+  hosts: all
+  tasks:
+  - name: "Fail task with ignore errors set as True"
+    fail:
+      msg: "Failed task"
+    ignore_errors: true
+  - name: "Another fail task"
+    fail:
+      msg: "Failed task"
