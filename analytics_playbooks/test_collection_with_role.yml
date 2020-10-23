@@ -1,0 +1,15 @@
+---
+- name: Uses collection and roles
+  gather_facts: False
+  hosts: all
+  collections:
+    - ibm.qradar
+  roles:
+    - benthomasson.hello_role
+  tasks:
+    - name: create log source
+      qradar_log_source_management:
+        name: "Ansible Collections Example Log Source"
+        type_name: "Linux OS"
+        state: present
+        description: "Ansible Collections Example Log Source Description"

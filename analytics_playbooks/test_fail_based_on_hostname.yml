@@ -1,0 +1,56 @@
+---
+- name: Fails on selective hosts
+  strategy: free
+  gather_facts: False
+  hosts: all
+  tasks:
+  - name: "test fail task 1. Succeeds: localhost10 is not in inventory"
+    fail:
+      msg: "Failed task 1."
+    when: "'localhost10' in inventory_hostname"
+  - name: "test fail task 2. Succeeds: failure ignored on localhost2"
+    fail:
+      msg: "Failed task 2"
+    when: "'localhost2' in inventory_hostname"
+    retries: 3
+    delay: 0
+    register: result2
+    until: result2 is not failed
+    ignore_errors: yes
+  - name: "test fail task 3. Succeeds: failure rescued on localhost3"
+    block:
+      - name: "test fail task 3 fails inside rescue block"
+        fail:
+          msg: "Failed task 3"
+        when: "'localhost3' in inventory_hostname"
+    rescue:
+      - debug:
+          msg: "test fail task 3 rescue message"
+  - name: "test fail task 4. Fails: localhost4 configured as unreachable"
+    shell: whoami
+    when: "'localhost4' in inventory_hostname"
+  - name: "test fail task 5. Fails: just fails on localhost5"
+    fail:
+      msg: "Failed task 5"
+    when: "'localhost5' in inventory_hostname"
+  - name: "test fail task 6, Succeeds: failure ignored on localhost6 but it fails in task 8"
+    fail:
+      msg: "Failed task 6"
+    when: "'localhost6' in inventory_hostname"
+    ignore_errors: yes
+  - name: "test fail task 7. Succeeds: failure rescued on localhost7 but it fails in task 8"
+    block:
+      - name: "test fail task 7 fails inside rescue block"
+        fail:
+          msg: "Failed task 7"
+        when: "'localhost7' in inventory_hostname"
+    rescue:
+      - debug:
+          msg: "test fail task 7 rescue message"
+  - name: "test fail task 8, Fails: just fails on localhost6, localhost7 and locahost8"
+    fail:
+      msg: "Failed task 8"
+    when: "'localhost6' in inventory_hostname or 'localhost7' in inventory_hostname or 'localhost8' in inventory_hostname"
+  - name: "Finished successfully !!!!!!!!!!!!"
+    debug:
+      msg: "Well done"

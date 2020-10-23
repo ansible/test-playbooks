@@ -1,0 +1,6 @@
+---
+- name: Uses role
+  gather_facts: False
+  hosts: all
+  roles:
+    - benthomasson.hello_role
