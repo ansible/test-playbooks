@@ -1,0 +1,18 @@
+---
+
+- hosts: localhost
+  gather_facts: false
+  collections:
+    - community.kubernetes
+  tasks:
+    - name: Deploy latest version of Grafana chart inside monitoring namespace with values
+      community.kubernetes.helm:
+        name: test-helm
+        chart_ref: stable/grafana
+        release_namespace: test-helm
+        values:
+          replicas: 2
+    - name: use helm info
+      community.kubernetes.helm_info:
+        name: test-helm
+        release_namespace: test-helm
