@@ -1,0 +1,9 @@
+---
+
+- hosts: all
+  gather_facts: false
+  vars:
+    stress_args: "--vm 16 --vm-bytes 1024M --timeout 60"
+  tasks:
+    - name: "Run stress command"
+      command: "stress {{ stress_args }}"
