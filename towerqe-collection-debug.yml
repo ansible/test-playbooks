@@ -1,0 +1,6 @@
+# main.yml
+---
+- hosts: localhost
+  gather_facts: false
+  roles:
+    - towerqe.test.debug
