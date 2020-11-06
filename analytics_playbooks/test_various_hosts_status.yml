@@ -1,0 +1,61 @@
+---
+- name: Generates multiple host status
+  #strategy: free
+  gather_facts: False
+  hosts: all
+  tasks:
+  - name: host status - ok
+    debug:
+      msg: "Playing {{ ansible_host }}"
+    when: "'localhost1' in inventory_hostname"
+
+  - name: host status - changed
+    debug:
+      msg: "I am a changed host."
+    changed_when: true
+    when: "'localhost2' in inventory_hostname"
+
+  - name: host status - failed
+    fail:
+      msg: "I did nothing to deserve this."
+    when: "'localhost3' in inventory_hostname"
+
+  - name: host status - retry
+    fail:
+      msg: "I did nothing to deserve this."
+    when: "'localhost4' in inventory_hostname"
+    retries: 2
+
+  - name: host status - ignored failed
+    fail:
+      msg: "<insert inspirational quote about failure>"
+    when: "'localhost5' in inventory_hostname"
+    ignore_errors: true
+
+  - name: host status - rescued failed
+    block:
+      - name: host status - rescued failed
+        fail:
+          msg: "HALP!!!"
+        when: "'localhost6' in inventory_hostname"
+    rescue:
+      - name: rescue task
+        debug: msg="ε-(´・｀) ﾌ"
+
+  - name: Set unreachable fact
+    set_fact: 
+      unreachable: true
+    when: "'localhost7' in inventory_hostname"
+
+  - name: host status - unreachable ignored
+    ping:
+    vars:
+      ansible_host: 'invalid.invalid'
+    when: unreachable is defined and unreachable
+    ignore_unreachable: true
+
+  - name: host status - unreachable
+    ping:
+    vars:
+      ansible_host: 'invalid.invalid'
+    when: unreachable is defined and unreachable

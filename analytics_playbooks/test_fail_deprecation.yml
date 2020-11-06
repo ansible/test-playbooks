@@ -1,9 +1,12 @@
 ---
-- name: Fails due to use of Deprecated module
-  gather_facts: False
-  hosts: all
+- name: deprecation warning
+  hosts: localhost
+  connection: local 
+  gather_facts: false
   tasks:
-  - name: Use a deprecated module
-    cl_license:
-      src: http://10.1.1.1/license.txt
-  
+  - name: Collect BIG-IP facts
+    bigip_device_facts:
+      gather_subset:
+        - interfaces
+        - vlans
+    delegate_to: localhost

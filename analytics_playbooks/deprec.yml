@@ -1,10 +1,9 @@
 ---
-- name: Firewalld
-  hosts: localhost
+- name: Fails due to use of Deprecated module
+  gather_facts: False
+  hosts: all
   tasks:
-    - firewalld:
-      args:
-        warn: true
-        service: https
-        permanent: yes
-        state: enabled
+  - name: Use a deprecated module
+    cl_license:
+      src: http://10.1.1.1/license.txt
+  

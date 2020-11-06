@@ -1,15 +1,12 @@
 ---
-- name: Uses collection and roles
-  gather_facts: False
+- name: Uses combinations of collection, roles and modules
+  gather_facts: True
   hosts: all
   collections:
-    - ibm.qradar
+    - irixjp.sample_collection_hello
   roles:
     - benthomasson.hello_role
+    - hello
   tasks:
-    - name: create log source
-      qradar_log_source_management:
-        name: "Ansible Collections Example Log Source"
-        type_name: "Linux OS"
-        state: present
-        description: "Ansible Collections Example Log Source Description"
+  - irixjp.sample_collection_hello.sample_get_locale:
+    register: ret
