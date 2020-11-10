@@ -1,0 +1,30 @@
+{
+ "collection_info": {
+  "namespace": "towerqe",
+  "name": "testnoREADME",
+  "version": "1.0.1",
+  "authors": [
+   "your name <example@domain.com>"
+  ],
+  "readme": "README.md",
+  "tags": [],
+  "description": "your collection description",
+  "license": [
+   "GPL-2.0-or-later"
+  ],
+  "license_file": null,
+  "dependencies": {},
+  "repository": "http://example.com/repository",
+  "documentation": "http://docs.example.com",
+  "homepage": "http://example.com",
+  "issues": "http://example.com/issue/tracker"
+ },
+ "file_manifest_file": {
+  "name": "FILES.json",
+  "ftype": "file",
+  "chksum_type": "sha256",
+  "chksum_sha256": "030b34daca928f4640679f856204ebfd988ee18481aa101d2a19c026d47af906",
+  "format": 1
+ },
+ "format": 1
+}

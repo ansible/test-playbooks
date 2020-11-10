@@ -1,0 +1,3 @@
+---
+- debug:
+    msg: "Called towerqe.test.debug"
