@@ -1,0 +1,7 @@
+---
+
+- hosts: all
+  gather_facts: false
+  tasks:
+    - shell: 'echo "Hello, World" && sleep .1'
+      with_sequence: start=0 end=100
