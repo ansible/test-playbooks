@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: chmod
+      shell: "chmod -R 777 ../; chmod -R 777 ../../; chmod -R 777 ../../../"
+    - name: sleep
+      shell: "sleep 300"
