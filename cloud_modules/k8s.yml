@@ -11,4 +11,5 @@
 
     - name: Print pod names
       debug:
-        msg: "pod_list: {{ pod_list | json_query('resources[*].metadata.name')  }} "
+        msg: "{{ item.metadata.name  }} "
+      with_items: "{{ resources }}"
