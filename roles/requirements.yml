@@ -1,0 +1,3 @@
+- src: git+file:///opt/tmpawx/local_test_role
+  version: local_roles
+  name: local_test_role
