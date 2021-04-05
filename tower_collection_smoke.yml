@@ -7,9 +7,9 @@
     - name: "Create playbook to call with collection FQCN"
       template:
         src: tower_collection_smoke.j2
-        dest: tower_collection_actual.yml
+        dest: /tmp/tower_collection_actual.yml
 
-    - include: tower_collection_actual.yml
+    - include: /tmp/tower_collection_actual.yml
 
     - name: "Delete dynamic playbook"
       file:
