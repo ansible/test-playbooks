@@ -1,0 +1,8 @@
+- hosts: all
+  gather_facts: false
+  vars:
+  tasks:
+    - command: echo -ne 'foo\0bar'
+      register: result
+    - debug:
+        msg: "{{ result.stdout }}"
