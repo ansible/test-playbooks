@@ -6,16 +6,19 @@ import random
 import string
 
 
-UNICODE_LETTERS = string.ascii_letters + ("읤僪䠱빨胀콩厺殜赬镗צּ䂕ᆑ䭆蜅펵ꂢ綌靸縹聂傈㟩륯Ȳ北벊렙ぶ逖ϥ谺艣뒉摳")
+random.seed(29973595994172)
 
 
-def random_str():
-    return "".join([random.choice(UNICODE_LETTERS) for _ in range(10)])
+def random_str(non_ascii=True):
+    char_list = string.ascii_letters
+    if non_ascii:
+        char_list += ("읤僪䠱빨胀콩厺殜赬镗צּ䂕ᆑ䭆蜅펵ꂢ綌靸縹聂傈㟩륯Ȳ北벊렙ぶ逖ϥ谺艣뒉摳")
+    return "".join([random.choice(char_list) for _ in range(10)])
 
 
 inventory = dict()
 
-group_name = "group_%s" % random_str()
+group_name = "group_%s" % random_str(non_ascii=False)
 
 inventory[group_name] = dict()
 inventory[group_name]["hosts"] = list()
