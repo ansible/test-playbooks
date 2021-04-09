@@ -1,0 +1,6 @@
+- name: Create an organization
+  {{ collection_id }}.tower_organization:
+    name: {{ organization_name | default("Test Org name") }}
+    default_environment: {{ default_environment }}
+    description: {{ description | default("default description") }}
+  register: org
