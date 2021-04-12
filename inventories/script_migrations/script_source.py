@@ -30,4 +30,4 @@ inventory[group_name]["vars"] = dict(
     ansible_host="127.0.0.1", ansible_connection="local"
 )
 
-print(json.dumps(inventory))
+print(json.dumps(inventory, ensure_ascii=False))
