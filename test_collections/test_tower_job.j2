@@ -1,0 +1,19 @@
+- name: launch Job
+  {{ collection_id }}.tower_job_launch:
+    job_template: {{ job_template }}
+  register: launch_job
+
+- name: cancel Job
+  {{ collection_id }}.tower_job_cancel:
+    job_id: {{ job_id }}
+  register: cancel_job
+
+- name: wait Job
+  {{ collection_id }}.tower_job_wait:
+    job_id: {{ job_template }}
+  register: wait_job
+
+- name: list Job
+  {{ collection_id }}.tower_job_list:
+    job_id: {{ job_template }}
+  register: list_job
