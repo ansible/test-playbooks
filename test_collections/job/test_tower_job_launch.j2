@@ -1,0 +1,4 @@
+- name: launch Job
+  {{ collection_id }}.tower_job_launch:
+    job_template: {{ job_template }}
+  register: launch_job
