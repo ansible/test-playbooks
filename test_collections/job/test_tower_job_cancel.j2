@@ -1,0 +1,4 @@
+- name: cancel Job
+  {{ collection_id }}.tower_job_cancel:
+    job_id: {{ job_id }}
+  register: cancel_job
