@@ -1,6 +1,6 @@
 ---
 
-- hosts: localhost
+- hosts: all
   vars:
    fail: true
 
