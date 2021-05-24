@@ -1,0 +1,3 @@
+[submodule "test-playbooks"]
+	path = test-playbooks
+	url = https://github.com/ansible/test-playbooks
