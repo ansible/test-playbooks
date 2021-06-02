@@ -1,0 +1,8 @@
+- name: Use the workflow_approval 
+  {{ collection_id }}.tower_workflow_approval:
+    name: {{ name }}
+    workflow_job_id: {{ workflow_job_id }} 
+    action: {{ action }}
+    timeout: {{ timeout | default("") }}
+    interval: {{ interval | default("") }}
+  register: workflow_approval
