@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  gather_facts: false
+  vars:
+    collection_id: awx.awx
+    src_file: tower_collection_smoke.j2
+    dest_file: tower_collection_actual.yml
+  tasks:
+    - name: "Create playbook to call with collection FQCN"
+      template:
+        src: "{{ src_file }}"
+        dest: "{{ dest_file }}"
