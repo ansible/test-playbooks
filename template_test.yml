@@ -1,12 +1,20 @@
 ---
 - hosts: localhost
   gather_facts: false
+  connection: local
   vars:
     collection_id: awx.awx
     src_file: tower_collection_smoke.j2
     dest_file: tower_collection_actual.yml
+    dest_file2: hello_world_template_test.txt
   tasks:
     - name: "Create playbook to call with collection FQCN"
       template:
         src: "{{ src_file }}"
         dest: "{{ dest_file }}"
+
+    - name: write something to file
+      local_action:
+        module: copy
+        content: "Hello_world.txt"
+        dest: "{{ dest_file2 }}"
