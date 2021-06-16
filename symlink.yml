@@ -1,0 +1,13 @@
+---
+- hosts: all
+  tasks:
+    - name: check symlink
+      stat:
+        path: good
+      register: symlink
+
+    - name: fail if good is not a symlink
+      fail:
+        msg: good is not a symlink
+      when: not symlink.stat.islnk
+
