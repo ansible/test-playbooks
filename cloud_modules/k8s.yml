@@ -1,6 +1,6 @@
 ---
 
-- hosts: all
+- hosts: localhost
   gather_facts: false
   collections:
     - community.kubernetes
