@@ -1,12 +1,24 @@
 ---
 
-- name: 'Test playbook to sleep for a specified interval'
-  hosts: all
+- name: Print out contents of all the files
+  hosts: localhost
   gather_facts: false
   connection: local
   vars:
-    sleep_interval: 30
+    inspect_path: "{{ playbook_dir }}/.."
+    max_len: 5000
 
   tasks:
-    - name: sleep for a specified interval
-      command: sleep '{{ sleep_interval }}'
+    - name: Echo the path that we are going to look at
+      debug: var=inspect_path
+
+    - name: Display paths in the fileglob
+      debug: msg={{ lookup('fileglob', '{{ inspect_path }}') }}
+
+    - name: Display the contents of the stuff inside of the files
+      debug: msg="Content is {{ lookup('file', item ) | length }} characters, printing {{ lookup('file', item ) | truncate(max_len) }}"
+      with_fileglob:
+        - '{{ inspect_path }}/*'
+        - '{{ inspect_path }}/inventory/*'
+        - '{{ inspect_path }}/project/*'
+        - '{{ inspect_path }}/env/*'
