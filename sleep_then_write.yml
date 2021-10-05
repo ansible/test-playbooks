@@ -16,3 +16,6 @@
       copy:
         content: "{{ test_content }}"
         dest: "{{ file_path }}"
+
+    - name: sleep for a the same specified interval to allow checking stuff
+      command: sleep '{{ sleep_interval }}'
