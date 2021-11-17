@@ -8,3 +8,5 @@
     - debug:
         msg: "This is a debug message: {{ item }}"
       with_sequence: 'count={{ num_messages }}'
+    - fail:
+        msg: "Fail at the end and see if we still process all the events"
