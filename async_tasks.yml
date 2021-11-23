@@ -11,7 +11,7 @@
     run_once: true
 
   - name: Poll a sleep
-    shell: "sleep 10"
+    command: "sleep 10"
     async: 30
     poll: 5
 
@@ -19,9 +19,7 @@
       msg: "I'm a debug message."
 
   - name: Fire and forget a slow command
-    shell: |
-      sleep 15
-      touch /tmp/test_file
+    command: "sleep 15 && touch /tmp/test_file"
     async: 30
     poll: 0
     register: fired
@@ -36,9 +34,7 @@
     retries: 20
 
   - name: Fire and forget a slow reversal
-    shell: |
-      sleep 10
-      rm -f /tmp/test_file
+    command: "sleep 10 && rm -f /tmp/test_file"
     async: 30
     poll: 0
     register: fired
