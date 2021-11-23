@@ -1,7 +1,8 @@
 ---
 
-- hosts: all
-  gather_facts: false
+- name: Run Async Tasks playbooks
+  hosts: all
+  gather_facts: true
   tasks:
 
   - name: Create the async directory to prevent race conditions
@@ -13,7 +14,7 @@
   - name: Poll a sleep
     command: "sleep 10"
     async: 30
-    poll: 5
+    poll: 0
 
   - debug:
       msg: "I'm a debug message."
@@ -28,7 +29,9 @@
       msg: "I'm another debug message."
 
   - name: Examine slow command
-    async_status: jid={{ fired.ansible_job_id }}
+    async_status:
+      jid: "{{ fired.ansible_job_id }}"
+      mode: status
     register: slow_command
     until: slow_command.finished
     retries: 20
@@ -43,7 +46,9 @@
       msg: "I'm yet another debug message."
 
   - name: Examine slow reversal
-    async_status: jid={{ fired.ansible_job_id }}
+    async_status:
+      jid: "{{ fired.ansible_job_id }}"
+      mode: status
     register: slow_command
     until: slow_command.finished
     retries: 20
