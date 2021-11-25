@@ -7,9 +7,8 @@
 
   - name: Create the async directory to prevent race conditions
     file:
-      path: /tmp/.ansible_async
+      path: ~/.ansible_async
       state: directory
-    run_once: true
 
   - name: Poll a sleep
     command: "sleep 10"
