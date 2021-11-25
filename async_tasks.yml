@@ -14,7 +14,7 @@
   - name: Poll a sleep
     command: "sleep 10"
     async: 30
-    poll: 0
+    poll: 5
 
   - debug:
       msg: "I'm a debug message."
@@ -22,7 +22,7 @@
   - name: Fire and forget a slow command
     command: "sleep 15 && touch /tmp/test_file"
     async: 30
-    poll: 0
+    poll: 5
     register: fired
 
   - debug:
@@ -39,7 +39,7 @@
   - name: Fire and forget a slow reversal
     command: "sleep 10 && rm -f /tmp/test_file"
     async: 30
-    poll: 0
+    poll: 5
     register: fired
 
   - debug:
