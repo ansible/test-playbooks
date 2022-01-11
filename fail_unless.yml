@@ -1,9 +1,0 @@
----
-
-- hosts: all
-  vars:
-   fail: true
-
-  tasks:
-   - fail: msg="Sorry, unless you tell me otherwise, this task will fail"
-     when: fail
