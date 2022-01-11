@@ -1,6 +1,0 @@
----
-- hosts: localhost
-  become: yes
-  tasks:
-    - name: Become
-      command: id
