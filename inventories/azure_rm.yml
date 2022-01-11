@@ -1,3 +1,0 @@
-plugin: azure_rm
-# azure_rm inventory plugin inventory, partial example
-# requires azure>=2.0.0 to be installed in venv to use
