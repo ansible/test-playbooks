@@ -11,6 +11,6 @@
           content: "Test Line"
       when: "{{ write | default(false) | bool }}"
 
-    - name: "Read file"
+    - name: "Read content from a file"
       command: "cat {{ read_path }}"
       when: "{{ read | default(false) | bool }}"
