@@ -11,6 +11,9 @@
       register: cnt
 
     - name: "Check if {{ filepath }} content is correct"
-      fail:
-        msg: "{{ filepath }} doesnt have the correct content"
-      when: "not '{{ cnt_to_check }}' in cnt"
+      lineinfile:
+        dest: "{{ filepath }}"
+        line: "{{ cnt_to_check }}"
+      check_mode: yes
+      register: present
+      failed_when: present.changed
