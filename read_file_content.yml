@@ -13,4 +13,4 @@
     - name: "Check if {{ filepath }} content is correct"
       fail:
         msg: "{{ filepath }} doesnt have the correct content"
-      when: 'not "{{ cnt_to_check }}" in cnt'
+      when: '"{{ cnt_to_check }}" not in cnt'
