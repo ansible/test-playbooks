@@ -1,0 +1,16 @@
+---
+
+- name: 'Test playbook to read and write from a file'
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: "Write content into a file"
+      copy:
+        - dest: "{{ write_path }}"
+          content: "Test Line"
+      when: "{{ write | default(false) | bool }}"
+
+    - name: "Read file"
+      command: "cat {{ read_path }}"
+      when: "{{ read | default(false) | bool }}"
