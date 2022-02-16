@@ -26,9 +26,6 @@
       register: cnt
 
     - name: "Check if {{ filepath }} content is correct"
-      lineinfile:
-        dest: "{{ filepath }}"
-        line: "Test Line"
-      check_mode: yes
-      register: present
-      failed_when: present.changed
+      fail:
+        msg: "{{ filepath }} doesnt have the correct content"
+      when: "not 'Test Line' in cnt"
