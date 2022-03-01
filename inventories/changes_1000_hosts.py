@@ -9,7 +9,7 @@ def time_val():
     return datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S.%f')
 
 
-host_names = [f'change_of_vars_{i}' for i in range(100)]
+host_names = [f'change_of_vars_{i}' for i in range(1000)]
 
 hostvars = {}
 for host in host_names:
