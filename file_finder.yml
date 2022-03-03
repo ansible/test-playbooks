@@ -15,10 +15,11 @@
     - name: Extract file content
       set_fact:
         file_content: "{{ file_content | default({}) | combine({ item.path: lookup('file', item.path) }) }}"
+      when: |
+        "../project" not in item.path
       loop: "{{ files.files }}"
       loop_control:
         label: "{{ item.path }}"
-      when: "'/.git/' not in item.path"
 
     - name: Set job stats
       set_stats:
