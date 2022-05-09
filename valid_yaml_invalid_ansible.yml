@@ -1,5 +1,0 @@
----
-- hosts: all
-  this_should_make_no_sense: |
-      and indeed it does not.  Because if it did, it would then
-          make sense
