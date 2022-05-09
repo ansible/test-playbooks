@@ -1,3 +1,0 @@
-plugin: aws_ec2
-# aws_ec2 inventory plugin inventory, partial example
-# boto3 must be installed in venv to successfully use plugin
