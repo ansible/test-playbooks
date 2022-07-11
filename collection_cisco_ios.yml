@@ -1,0 +1,7 @@
+---
+- name: Execute the cisco ios collection
+  hosts: localhost
+  vars:
+  tasks:
+    - include_role:
+        name: cisco.ios.ios
