@@ -4,15 +4,15 @@
   gather_facts: no
 
   vars:
-    ansible_network_os: "cisco.ios.ios"
+      ansible_network_os: "cisco.ios.ios"
 
   tasks:
     ###
     # Collect data
     #
-    - name: Gather facts (eos)
-      arista.eos.eos_facts:
-      when: ansible_network_os == 'arista.eos.eos'
+#    - name: Gather facts (eos)
+#      arista.eos.eos_facts:
+#      when: ansible_network_os == 'arista.eos.eos'
 
     - name: Gather facts (ios)
       cisco.ios.ios_facts:
@@ -80,10 +80,10 @@
       when: ansible_network_os == 'vyos.vyos.vyos'
 
     - name: backup switch (ios)
-        cisco.ios.ios_config:
-          backup: yes
-        register: backup_ios_location
-        when: ansible_network_os == 'cisco.ios.ios'
+      cisco.ios.ios_config:
+        backup: yes
+      register: backup_ios_location
+      when: ansible_network_os == 'cisco.ios.ios'
 
     - name: Create backup dir
       file:
