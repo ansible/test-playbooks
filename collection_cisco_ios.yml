@@ -36,7 +36,7 @@
     - name: Write facts to disk using a template
       copy:
         content: |
-#          #jinja2: lstrip_blocks: True
+          #jinja2: lstrip_blocks: True
 #          EOS device info:
 #            {% for host in groups['eos'] %}
 #            Hostname: {{ hostvars[host].ansible_net_hostname }}
