@@ -29,4 +29,4 @@
     - name: "Check if {{ filepath }} content is correct"
       fail:
         msg: "{{ filepath }} doesnt have the correct content"
-      when: '{{ content }} not in cnt.stdout'
+      when: '"{{ content }}" not in cnt.stdout'
