@@ -1,0 +1,2 @@
+python-gnupg
+git+https://github.com/ansible/ansible-sign.git@main
