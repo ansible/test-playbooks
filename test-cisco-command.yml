@@ -1,6 +1,6 @@
 ---
 - name: config
- hosts: all
+ hosts: ios_devices
  gather_facts: no
  tasks:
  - name: configure provider
