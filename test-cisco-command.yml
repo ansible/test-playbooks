@@ -1,7 +1,7 @@
 ---
 - name: config
- hosts: Test-RS-Host
- gather_facts: no
+ hosts: all
+ gather_facts: true
  tasks:
  - name: configure provider
  set_fact:
