@@ -1,6 +1,5 @@
 ---
-- name: config
-hosts: all
+- hosts: all
 gather_facts: no
 tasks:
  - name: configure provider
