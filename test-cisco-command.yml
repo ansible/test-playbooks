@@ -1,8 +1,8 @@
 ---
 - name: config
- hosts: all
- gather_facts: true
- tasks:
+hosts: all
+gather_facts: no
+tasks:
  - name: configure provider
  set_fact:
  provider:
