@@ -1,6 +1,6 @@
 ---
 - name: config
- hosts: ios_devices
+ hosts: Test-RS-Host
  gather_facts: no
  tasks:
  - name: configure provider
