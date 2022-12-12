@@ -1,0 +1,14 @@
+--- # Creating users by a loop
+- hosts: all
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: no
+  tasks:
+  - name: Create new users
+    user: name={{ item }} state=present group=wheel
+    with_items:
+      - user1
+      - user2
+      - user3
