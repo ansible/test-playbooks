@@ -1,0 +1,29 @@
+---
+- hosts: all
+  vars:
+    receptor_user: awx
+    receptor_group: awx
+    receptor_tls: true
+    custom_worksign_public_keyfile: receptor/work-public-key.pem
+    custom_tls_certfile: receptor/tls/receptor.crt
+    custom_tls_keyfile: receptor/tls/receptor.key
+    custom_ca_certfile: receptor/tls/ca/receptor-ca.crt
+    receptor_peers:
+      - protocol: tcp
+        address: "{{ peer_one }}"
+        port: 27199
+      - protocol: tcp
+        address: "{{ peer_two }}"
+        port: 27199
+  become: yes
+  tasks:
+    - ansible.builtin.user:
+        name: "{{ receptor_user }}"
+        shell: /bin/bash
+    - ansible.builtin.command: dnf copr enable ansible-awx/receptor -y
+    - ansible.builtin.import_role:
+        name: ansible.receptor.setup
+    - ansible.builtin.command: cat /etc/receptor/receptor.conf
+      register: receptor_conf
+    - ansible.builtin.debug:
+        msg: "{{ receptor_conf.stdout | to_nice_yaml }}"
