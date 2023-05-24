@@ -15,7 +15,7 @@
       with_sequence: 'count={{ num_changed }}'
 
     - debug:
-        msg: "This is a debug message that fails: {{ item }}"
+        msg: "This is a debug message that fails"
       failed_when: true
 
     # BUG: this is not working in AWX
