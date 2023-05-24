@@ -13,10 +13,10 @@
 
     - debug:
         msg: "This is a debug message that changes: {{ item }}"
-      with_sequence: 'count={{ num_messages }}'
+      with_sequence: 'count={{ num_changed }}'
       changed_when: true
 
     - debug:
         msg: "This is a debug message that fails: {{ item }}"
-      with_sequence: 'count={{ num_messages }}'
+      with_sequence: 'count={{ num_failed }}'
       failed_when: true
