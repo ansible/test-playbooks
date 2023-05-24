@@ -1,0 +1,22 @@
+---
+
+- hosts: all
+  gather_facts: false
+  vars:
+    num_messages: 50
+    num_changed: 50
+    num_failed: 50
+  tasks:
+    - debug:
+        msg: "This is a debug message: {{ item }}"
+      with_sequence: 'count={{ num_messages }}'
+
+    - debug:
+        msg: "This is a debug message that changes: {{ item }}"
+      with_sequence: 'count={{ num_messages }}'
+      changed_when: true
+
+    - debug:
+        msg: "This is a debug message that fails: {{ item }}"
+      with_sequence: 'count={{ num_messages }}'
+      failed_when: true
