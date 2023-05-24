@@ -1,0 +1,3 @@
+- debug:
+    msg: "This is a debug message that fails: {{ item }}"
+  failed_when: true

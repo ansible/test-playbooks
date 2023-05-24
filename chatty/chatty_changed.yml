@@ -1,0 +1,18 @@
+---
+
+- hosts: all
+  gather_facts: false
+  vars:
+    num_messages: 50
+    num_changed: 50
+    num_failed: 50
+  tasks:
+    - debug:
+        msg: "This is a debug message: {{ item }}"
+      with_sequence: 'count={{ num_messages }}'
+
+    - include_tasks: changed.yml
+      with_sequence: 'count={{ num_changed }}'
+
+    - include_tasks: failed.yml
+      with_sequence: 'count={{ num_changed }}'
