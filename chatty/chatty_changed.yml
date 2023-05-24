@@ -14,5 +14,10 @@
     - include_tasks: changed.yml
       with_sequence: 'count={{ num_changed }}'
 
-    - include_tasks: failed.yml
-      with_sequence: 'count={{ num_changed }}'
+    - debug:
+        msg: "This is a debug message that fails: {{ item }}"
+      failed_when: true
+
+    # BUG: this is not working in AWX
+    # - include_tasks: failed.yml
+    #   with_sequence: 'count={{ num_changed }}'
