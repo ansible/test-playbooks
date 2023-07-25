@@ -41,4 +41,4 @@
             object: {}
           empty_list: []
           empty_object: {}
-        no_log: "{{ artifact_no_log | default(false) }}"
+      no_log: "{{ artifact_no_log | default(false) }}"

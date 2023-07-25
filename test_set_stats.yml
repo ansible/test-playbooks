@@ -33,6 +33,6 @@
   tasks:
   - set_stats:
       data: "{{ set_stats_data }}"
-      no_log: "{{ artifact_no_log }}"
+    no_log: "{{ artifact_no_log }}"
   - fail: "Intentionally failing because variable 'fail_at_end' was set to {{ fail_at_end }}"
     when: fail_at_end
