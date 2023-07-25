@@ -23,14 +23,16 @@
         float: 1.0
         unicode: '竳䙭韽'
         boolean: true
-        none: null            
+        none: null
         list: []
         object: {}
       empty_list: []
       empty_object: {}
     fail_at_end: false
+    artifact_no_log: false
   tasks:
   - set_stats:
       data: "{{ set_stats_data }}"
+      no_log: "{{ artifact_no_log }}"
   - fail: "Intentionally failing because variable 'fail_at_end' was set to {{ fail_at_end }}"
     when: fail_at_end
