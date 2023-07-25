@@ -1,7 +1,7 @@
 ---
 
 - hosts: all
-  gather_facts: true 
+  gather_facts: true
   tasks:
     - name: set a fact man
       set_fact:
@@ -36,9 +36,9 @@
             float: 1.0
             unicode: '竳䙭韽'
             boolean: true
-            none: null            
+            none: null
             list: []
             object: {}
           empty_list: []
-          empty_object: {} 
-
+          empty_object: {}
+        no_log: "{{ artifact_no_log | default(false) }}"
