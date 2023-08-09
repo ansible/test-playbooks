@@ -1,2 +1,3 @@
 collections:
   - name: awx.awx
+  - name: "chrismeyersfsu.test_things"
