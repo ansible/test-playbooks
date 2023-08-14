@@ -1,4 +1,2 @@
-# Test requirements file
-
-- src: yatesr.timezone
-- src: grog.debug-variable
+---
+- src: irixjp.role_example_hello
