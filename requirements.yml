@@ -1,0 +1,23 @@
+---
+- name: Test collection and roles
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Run hello world role included from collections/requirements.yml
+      include_role:
+        name: eamontracey.hello_collection.hello
+
+    - name: Run role from roles/requirements.yml
+      include_role:
+        name: irixjp.role_example_hello
+      vars:
+        ansible_env:
+          LANG: fr_FR.UTF-8
+
+    - name: Run role from requirements.yml
+      include_role:
+        name: marcinpraczko.hello_world
+
+    - name: Run role from collection in requirements.yml
+      include_role:
+        name: matthewcosgrove.hello_world.hello_world
