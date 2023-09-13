@@ -1,0 +1,3 @@
+---
+- debug: msg="{{ message_number|default(1) * message_size|default(1024) }}"
+- pause: seconds="{{ sleep_interval|default(1)|int }}"

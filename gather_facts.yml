@@ -1,11 +1,14 @@
 ---
 
 - hosts: all
-  gather_facts: true 
+  vars:
+    play_gather: true
+    extra_value: ""
+  gather_facts: "{{ play_gather }}"
   tasks:
     - name: set a fact man
       set_fact:
-        foo: "bar"
+        foo: "bar{{ extra_value }}"
         bar:
           a:
             b:

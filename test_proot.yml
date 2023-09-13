@@ -12,16 +12,15 @@
     tower_conf_dir: /etc/tower
     tower_tmp_dirs:
         - /tmp
-        - /var/tmp
     sys_log_dir: /var/log
     tower_projects_dir: /var/lib/awx/projects
     tower_job_status_dir: /var/lib/awx/job_status
 
   tasks:
-    - command: find {{tower_tmp_dirs|join(' ')}} -mindepth 1 -maxdepth 1 -type d -regex '.*awx_.*_.*'
+    - command: find {{tower_tmp_dirs|join(' ')}} -mindepth 1 -maxdepth 1 -type d -regex '.*bwrap_.*_.*'
       register: result
     - debug: var=result
-    - name: assert that only one awx_.*_.* tempfile is visible
+    - name: assert that only one bwrap_.*_.* tempfile is visible
       assert:
         that:
           - 'result.rc == 0'

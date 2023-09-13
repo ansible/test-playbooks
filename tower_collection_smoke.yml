@@ -1,0 +1,29 @@
+---
+- hosts: localhost
+  gather_facts: false
+  vars:
+    collection_id: awx.awx
+    src_file: tower_collection_smoke.j2
+    dest_file: tower_collection_actual.yml
+  tasks:
+    - name: "List what collections are installed (only available with ansible 2.10+)"
+      shell: "ansible-galaxy collection list"
+      register: ansible_collections_list
+      when: ansible_version.full is version('2.10.0', '>=')
+
+    - name: "Echo what collections are installed (only available with ansible 2.10+)"
+      debug:
+        msg: "{{ ansible_collections_list.stdout_lines }}"
+      when: ansible_version.full is version('2.10.0', '>=')
+
+    - name: "Create playbook to call with collection FQCN"
+      template:
+        src: "{{ src_file }}"
+        dest: "{{ dest_file }}"
+
+    - include: "{{ dest_file }}"
+
+    - name: "Delete dynamic playbook"
+      file:
+        path: "{{ dest_file }}"
+        state: absent

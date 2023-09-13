@@ -3,6 +3,13 @@
 - hosts: all
   gather_facts: false
   tasks:
+
+  - name: Create the async directory to prevent race conditions
+    file:
+      path: ~/.ansible_async
+      state: directory
+    run_once: true
+
   - name: Poll a sleep
     shell: "sleep 10"
     async: 30

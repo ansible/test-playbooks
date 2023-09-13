@@ -1,0 +1,13 @@
+- name: Create a job template 
+  {{ collection_id }}.tower_job_template:
+    name: {{ job_template_name | default("Default jt name") }}
+    execution_environment: {{ execution_environment }}
+    description: {{ description | default("default description") }}
+    job_type: {{ job_type }}
+    inventory: {{ inventory }}
+    playbook: {{ playbook }}
+    project: {{ project }}
+    vault_credential: {{ vault_credential }}
+    extra_vars: {{ extra_vars }}
+    state: {{ state | default("present") }}
+  register: job_template

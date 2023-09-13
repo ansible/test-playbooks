@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: false
+  vars:
+    sleep_interval: 1
+    num_messages: 50
+  tasks:
+    - name: debug and sleep for configured time
+      include_tasks: debug_and_sleep.yml
+      vars:
+        message_number: "{{ item }}"
+      loop: "{{ range(0, num_messages|int)|list }}"

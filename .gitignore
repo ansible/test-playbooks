@@ -1,1 +1,5 @@
 *.pyc
+
+
+.idea
+/tower_collection_actual.yml

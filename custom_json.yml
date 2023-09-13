@@ -7,3 +7,4 @@
       include_vars: custom_json_vars.yml
     - debug: msg="{{ vaulted_text }}"
     - debug: msg="{{ unsafe_text }}"
+    - debug: msg="{{ datetime_text }}"

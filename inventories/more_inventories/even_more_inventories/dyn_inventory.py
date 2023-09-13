@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from argparse import ArgumentParser
-from pprint import pprint
+import json
 
 inventory = {'group_seven': {'hosts': ['group_seven_host_0{}'.format(i) for i in range(1, 6)]
                                     + ['group_seven_and_eight_host_0{}'.format(i) for i in range(1, 6)]
@@ -22,6 +22,9 @@ inventory = {'group_seven': {'hosts': ['group_seven_host_0{}'.format(i) for i in
                                     'group_eight_host_01': {'group_eight_host_01_has_this_var': True},
                                     'group_nine_host_01': {'group_nine_host_01_has_this_var': True}}}}
 
+def dumps(dct):
+    return json.dumps(dct, sort_keys=True, indent=4, separators=(',', ': '))
+
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument('--list', dest='list_instances', action='store_true', default=True,
@@ -33,7 +36,7 @@ def parse_args():
 def load_inventory():
     args = parse_args()
     if args.list_instances:
-        pprint(inventory)
+        print(dumps(inventory))
 
 
 if __name__ == '__main__':

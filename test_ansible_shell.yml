@@ -5,12 +5,11 @@
   tasks:
     - name: Write inventory file
       blockinfile:
-        path: '{{ playbook_dir }}/inventory.ansible.shell'
+        path: '/tmp/inventory.ansible.shell'
         block: |
           localhost ansible_connection=local
         state: present
         create: True
 
     - name: Run Playbook
-      shell: "ANSIBLE_NOCOLOR=1 ansible-playbook -i './inventory.ansible.shell' ./ping.yml"
-
+      shell: "ANSIBLE_NOCOLOR=1 ansible-playbook -i '/tmp/inventory.ansible.shell' ./ping.yml"

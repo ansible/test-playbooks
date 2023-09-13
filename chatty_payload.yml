@@ -1,0 +1,11 @@
+---
+- hosts: all
+  gather_facts: no
+  vars:
+    message_size: 1024 #message size in Bytes[1KB]
+    num_messages: 10  #number of messages
+    chatty_message: "{{ '$' * message_size }}"
+  tasks:
+    - debug:
+          msg: "{{ chatty_message }}"
+      with_sequence: "count={{ num_messages }}"

@@ -1,0 +1,10 @@
+- name: Create an tower_inventory_source 
+  {{ collection_id }}.tower_inventory_source:
+    name: {{ name }}
+    inventory: {{ inventory }} 
+    description: {{ description }}
+    source: {{ source }}
+    source_project: {{ source_project }}
+    source_path: {{ source_path }}
+    execution_environment: {{ execution_environment }}
+  register: inventory_source

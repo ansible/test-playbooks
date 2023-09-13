@@ -1,0 +1,8 @@
+- name: Create an tower_execution_environment
+  {{ collection_id }}.tower_execution_environment:
+    name: {{ name }}
+    image: {{ image | default("quay.io/ansible/awx-ee:devel") }} 
+    description: {{ description | default("default description") }}
+    organization: {{ organization | default("")}}
+    pull: {{ pull | default("missing")}}
+  register: execution_environment
