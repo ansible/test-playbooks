@@ -1,0 +1,3 @@
+- debug:
+    msg: "This is a debug message that changes: {{ item }}"
+  changed_when: true
