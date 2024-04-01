@@ -1,8 +1,6 @@
 ---
 collections:
   - name: community.general
-    source: https://galaxy.ansible.com
-
-  #- name: ansible.posix
-  #- name: awx.awx
-
+  - name: ansible.posix
+  - name: awx.awx
+  - name: redhat_cop.aap_utilities
