@@ -3,4 +3,3 @@ collections:
   - name: community.general
   - name: ansible.posix
   - name: awx.awx
-  - name: redhat_cop.aap_utilities
