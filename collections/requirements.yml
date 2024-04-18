@@ -1,5 +1,0 @@
----
-collections:
-  - name: community.general
-  - name: ansible.posix
-  - name: awx.awx
