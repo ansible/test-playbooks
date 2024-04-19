@@ -1,4 +1,6 @@
 - hosts: all
   gather_facts: false
   tasks:
-  - ansible.builtin.import_playbook: gen_host_status_base.yml
+  - name: Run gen host status base tasks
+    ansible.builtin.include_tasks:
+      file: gen_host_status_base.yml
