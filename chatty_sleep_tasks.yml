@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    message_size: 1024*1024 # message size in Bytes[1MB]
+    num_messages: 5        # number of messages
+    chatty_message: "{{ '$' * message_size|int }}"
+    pause_time_min: 65
+
+  tasks:
+    - name: Run a task an sleep
+      include_tasks: chatty_block.yml
+      with_sequence: "count={{ num_messages }}"
