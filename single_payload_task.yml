@@ -1,0 +1,4 @@
+---
+- name: Send single debug message
+- ansible.builtin.debug:
+      msg: "{{ chatty_message | default('This is test message') }}"
