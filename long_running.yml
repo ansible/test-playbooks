@@ -1,0 +1,9 @@
+---
+
+- name: 'Test playbook that sleeps for long so there's time to cancel it'
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: sleep for long
+      command: sleep 100000
