@@ -1,0 +1,7 @@
+---
+
+- name: Include the debug playbook
+  import_playbook: debug.yml
+
+- name: Include the debug playbook another time
+  import_playbook: debug.yml
