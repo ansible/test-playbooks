@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  gather_facts: False
+  connection: local
+  vars:
+    running_env: []
+    write_env_file: False
+  tasks:
+    - look_at_environment:
+      register: result
+
+    - copy:
+        content: "{{ result.printenv }}"
+        dest: inner_env.txt
+      when: write_env_file
+
+    - set_stats:
+        data: "{{ result }}"
