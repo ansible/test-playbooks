@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  tasks: 
+    
+    - name: cidr_merge with merge action
+      ansible.builtin.set_fact:
+        value:
+          - 192.168.0.0/17
+          - 192.168.128.0/17
+          - 192.168.128.1
+    - debug:
+        msg: '{{ value|ansible.utils.cidr_merge }}'
