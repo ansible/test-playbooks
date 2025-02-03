@@ -1,8 +1,12 @@
---- 
+---
 - name: basic windows
   hosts: all
-  gather_facts: true
+  gather_facts: false
   tasks:
+
+  - name: password echo
+    debug:
+      var: ansible_password
 
   - name: ping
     ansible.windows.win_ping:
@@ -11,16 +15,16 @@
       script: | 
         Write-Host "Hello World!"
 
-    - name: test stat module on file
-      win_stat: path="C:/Windows/win.ini"
-      register: stat_file
+  - name: test stat module on file
+    win_stat: path="C:/Windows/win.ini"
+    register: stat_file
 
-    - debug: var=stat_file
+  - debug: var=stat_file
 
-    - name: check stat_file result
-      assert:
-          that:
-             - "stat_file.stat.exists"
-             - "not stat_file.stat.isdir"
-             - "stat_file.stat.size > 0"
-             - "stat_file.stat.md5"
+  - name: check stat_file result
+    assert:
+        that:
+           - "stat_file.stat.exists"
+           - "not stat_file.stat.isdir"
+           - "stat_file.stat.size > 0"
+           - "stat_file.stat.md5"
