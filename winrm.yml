@@ -27,4 +27,3 @@
            - "stat_file.stat.exists"
            - "not stat_file.stat.isdir"
            - "stat_file.stat.size > 0"
-           - "stat_file.stat.md5"
