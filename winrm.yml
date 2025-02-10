@@ -1,8 +1,26 @@
 ---
-- name: basic windows
-  hosts: all
+- name: local network access
+  hosts: local
   gather_facts: false
   tasks:
+  - name: get http://localhost:8081/
+    ansible.builtin.uri:
+      url: http://www.example.com
+      return_content: true
+    register: local_server_result
+  
+  - name: show content
+    debug:
+      var: local_server_result
+
+- name: basic windows
+  hosts: windows
+  gather_facts: false
+  tasks:
+
+  - name: password echo
+    debug:
+      var: ansible_password
 
   - name: password echo
     debug:
