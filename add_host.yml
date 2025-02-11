@@ -4,7 +4,7 @@
   connection: local
   tasks:
   
-    - name: Add host to group 'just_created' with variable foo=42
+    - name: Add host to group 'just_created'
       ansible.builtin.add_host:
         name: 'david2'
         groups: just_created
