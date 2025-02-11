@@ -9,6 +9,10 @@
         name: 'david2'
         groups: just_created
 
+    - name: Add host that actually exists on other inventory in controller
+      ansible.builtin.add_host:
+        name: 'david3'
+
     - debug: 
         msg: "hello {{ inventory_hostname }}"
 
