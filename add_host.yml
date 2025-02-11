@@ -6,7 +6,7 @@
   
     - name: Add host to group 'just_created' with variable foo=42
       ansible.builtin.add_host:
-        name: 'hageman'
+        name: 'david2'
         groups: just_created
 
     - debug: 
