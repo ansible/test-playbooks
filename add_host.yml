@@ -2,8 +2,6 @@
 - hosts: all
   gather_facts: false
   connection: local
-  vars:
-    msg: 'hello'
   tasks:
   
     - name: Add host to group 'just_created' with variable foo=42
@@ -11,4 +9,5 @@
         name: 'hageman'
         groups: just_created
 
-    - debug: "hello {{ inventory_hostname }}"
+    - debug: 
+        msg: "hello {{ inventory_hostname }}"
