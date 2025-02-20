@@ -1,0 +1,22 @@
+---
+- name: match multiple rules with all
+  match_multiple_rules: true
+  hosts: all
+  sources:
+    - ansible.eda.generic:
+        payload:
+          - i: 1
+          - i: 9
+          - i: 3
+  rules:
+    - name: r1
+      condition: event.i == 1
+      action:
+        debug:
+    - name: r11
+      condition: 
+        all:
+          - event.i == 1
+          - event.i == 3
+      action:
+        print_event:

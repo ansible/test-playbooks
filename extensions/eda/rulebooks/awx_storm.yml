@@ -1,0 +1,29 @@
+---
+- name: "Launch storm of JT's"
+  hosts: all
+  sources:
+    - ansible.eda.generic:
+        shutdown_after: 3600
+        repeat_count: 100
+        create_index: "index"
+        payload:
+          - state: "down"
+
+
+  rules:
+    - name: "Run job template - storm mode"
+      condition: event.state == "down"
+      actions:
+        - debug:
+            msg: "JT launched for #{{ event.index }}"
+
+        - run_job_template:
+            name: run_basic
+            organization: Default
+            job_args:
+              extra_vars:
+                fake_execution_time: "10"
+
+        - debug:
+            msg: "JT executed for #{{ event.index }}"
+            

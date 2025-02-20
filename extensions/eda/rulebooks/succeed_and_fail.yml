@@ -1,0 +1,26 @@
+# rulebook with failed and successful job templates, 
+# to be used with https://github.com/Alex-Izquierdo/eda-awx-project-sample
+  - name: Fail and succeed
+    hosts: all
+    sources:
+      - ansible.eda.range:
+          limit: 3
+    rules:
+      - name: Run multiple actions with success and failure
+        condition: event.i == 0
+        actions:
+          - run_job_template:
+              organization: Default
+              name: run_basic
+              job_args:
+                extra_vars:
+                  fake_execution_time: '1'
+          - run_job_template:
+              organization: Default
+              name: fail_basic
+          - run_job_template:
+              organization: Default
+              name: run_basic
+              job_args:
+                extra_vars:
+                  fake_execution_time: '1'

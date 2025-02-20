@@ -1,0 +1,66 @@
+---
+- name: list checks with saved events
+  hosts: all
+  sources:
+    - name: my source
+      ansible.eda.generic:
+        payload:
+           - plu: 4132
+             apples:
+               - gala large apple
+               - gala small apple
+           - fruit: gala large apple
+           - plu: 4284
+             grapefruits:
+               - Ray Ruby
+               - Ruby Red
+           - fruit: Ruby Red
+           - fruit:
+              name: Braeburn
+              plu: 4101
+           - favorite_apple_plus:
+              - 4101
+              - 4103
+              - 4132
+              - 4133
+           - fruit:
+              name: Kent
+              plu: 3488
+           - favorite_mango_plus:
+              - 3488
+              - 4959
+              - 4051
+              - 4312
+  rules:
+    - name: Gala rules
+      condition:
+        all:
+          - events.match << event.plu == 4132
+          - event.fruit in events.match.apples
+      action:
+        print_event:
+          pretty: true
+    - name: Ruby Red rules
+      condition:
+        all:
+          - events.match << event.plu == 4284
+          - events.match.grapefruits contains event.fruit
+      action:
+        print_event:
+          pretty: true
+    - name: Braeburn rules
+      condition:
+        all:
+          - events.apple << event.fruit.name == "Braeburn"
+          - events.apple.fruit.plu in event.favorite_apple_plus
+      action:
+        print_event:
+          pretty: true
+    - name: Kent mango rules
+      condition:
+        all:
+          - events.mango << event.fruit.name == "Kent"
+          - event.favorite_mango_plus contains events.mango.fruit.plu
+      action:
+        print_event:
+          pretty: true
