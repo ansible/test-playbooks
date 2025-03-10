@@ -1,0 +1,4 @@
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - testing.indirect_host_counting.produce_inc_output:

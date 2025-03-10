@@ -1,0 +1,3 @@
+{
+ "foo.bar.baz": {"query": "[.my_children | .[] | select(.changed == true)] | length", "category": "children"}
+}
