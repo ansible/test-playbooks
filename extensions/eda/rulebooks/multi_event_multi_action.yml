@@ -1,0 +1,18 @@
+- name: Multi event and multi action combo
+  hosts: all
+  sources:
+    - ansible.eda.range:
+        limit: 5
+        delay: 0.5
+
+  rules:
+    - name: Multi-match
+      condition:
+        all:
+          - event.i == 1
+          - event.i == 3
+      actions:
+        - print_event:
+        - debug:
+            msg: "Good night"
+

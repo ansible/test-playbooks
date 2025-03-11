@@ -1,0 +1,15 @@
+---
+- name: Execute a JT that will always fail
+  hosts: all
+  sources:
+    - ansible.eda.range:
+        limit: 10
+        delay: 0.5
+  rules:
+    - name: Run fail JT at 8
+      condition: event.i == 8
+      action:
+        run_job_template:
+          organization: Default
+          name: fail_basic
+
