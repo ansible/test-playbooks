@@ -1,0 +1,4 @@
+---
+- name: Running task number {{ item }}
+  ansible.builtin.debug:
+    msg: "This is a debug message for task number : {{ item }}"
