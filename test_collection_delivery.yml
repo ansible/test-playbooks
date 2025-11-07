@@ -1,0 +1,25 @@
+- name: Test Collection Delivery Mechanism
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Display ANSIBLE_COLLECTIONS_PATHS
+      debug:
+        var: lookup('env', 'ANSIBLE_COLLECTIONS_PATHS')
+
+    - name: Use module from vendor collection
+      mytest.verify.hello:
+        name: "AWX Containerized Test"
+      register: result
+
+    - name: Display result
+      debug:
+        msg: "{{ result.message }}"
+
+    - name: Verify success
+      assert:
+        that:
+          - result.message is defined
+          - "'Collection loaded successfully' in result.message"
+        success_msg: "✅ SUCCESS: Collection delivery works!"
+        fail_msg: "❌ FAILED: Collection not accessible"
+
