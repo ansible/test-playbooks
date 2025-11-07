@@ -1,0 +1,883 @@
+---
+- name: Play - Generate warnings using local module
+  hosts: all
+  gather_facts: false
+  vars:
+    loop_small: 1
+    loop_medium: 1
+    loop_large: 1
+    loop_xlarge: 1
+
+  tasks:
+    # Play-level deprecation warning - runs once per play
+    - name: Play-level deprecated warning
+      generate_meta_events:
+        event_type: deprecated
+        message: "This play uses deprecated Ansible features"
+      run_once: true
+      ignore_errors: yes
+
+    # Root event to push playbook_on_start to counter 2+
+    - name: Root event
+      debug:
+        msg: "Play 1 root"
+      ignore_errors: yes
+
+    # Use local module to generate REAL Ansible warning meta events
+    # These call module.warn() internally, just like file.py does
+    - name: Generate warning meta event {{ item }}
+      generate_meta_events:
+        event_type: warning
+        message: "Real Ansible warning {{ item }}"
+      loop: "{{ range(1, loop_medium|int + 1)|list }}"
+      ignore_errors: yes
+
+- name: Play - More warnings
+  hosts: all
+  gather_facts: false
+  vars:
+    loop_small: 1
+    loop_medium: 1
+    loop_large: 1
+    loop_xlarge: 1
+
+  tasks:
+    # Play-level deprecation warning - runs once per play
+    - name: Play-level deprecated warning
+      generate_meta_events:
+        event_type: deprecated
+        message: "This play uses deprecated Ansible features"
+      run_once: true
+      ignore_errors: yes
+
+    - name: Generate warning {{ item }}
+      generate_meta_events:
+        event_type: warning
+        message: "Warning {{ item }}"
+      loop: "{{ range(1, loop_medium|int + 1)|list }}"
+      ignore_errors: yes
+
+- name: Play - Deprecated events
+  hosts: all
+  gather_facts: false
+  vars:
+    loop_small: 1
+    loop_medium: 1
+    loop_large: 1
+    loop_xlarge: 1
+
+  tasks:
+    # Play-level deprecation warning - runs once per play
+    - name: Play-level deprecated warning
+      generate_meta_events:
+        event_type: deprecated
+        message: "This play uses deprecated Ansible features"
+      run_once: true
+      ignore_errors: yes
+
+    - name: Generate deprecated meta event {{ item }}
+      generate_meta_events:
+        event_type: deprecated
+        message: "Deprecated feature {{ item }}"
+      loop: "{{ range(1, loop_small|int + 1)|list }}"
+      ignore_errors: yes
+
+    - name: Child {{ item }}
+      debug:
+        msg: "Play 3 child {{ item }}"
+      loop: "{{ range(1, loop_medium|int + 1)|list }}"
+      ignore_errors: yes
+
+- name: Play  - Error events
+  hosts: all
+  gather_facts: false
+
+  tasks:
+
+- name: Play  - Generate ~2500 lines of output
+  hosts: all
+  gather_facts: false
+  vars:
+    dest_path: /tmp/test_output_play1
+    loop_small: 1
+    loop_medium: 1
+    loop_large: 1
+    loop_xlarge: 1
+
+  tasks:
+    # Play-level deprecation warning - runs once per play
+    - name: Play-level deprecated warning
+      generate_meta_events:
+        event_type: deprecated
+        message: "This play uses deprecated Ansible features"
+      run_once: true
+      ignore_errors: yes
+
+    # System info operations
+    - name: System info operations
+      block:
+        - name: Ping the servers
+          ping:
+          ignore_errors: yes
+
+        - name: Generate deprecated warning for ping task
+          generate_meta_events:
+            event_type: deprecated
+            message: "Ping task uses deprecated connection method"
+          ignore_errors: yes
+
+        - name: Gather Memory Information
+          shell: free -m
+          register: memory_info
+          ignore_errors: yes
+
+        - name: Display Memory Information
+          debug:
+            msg: "{{ memory_info.stdout_lines }}"
+          ignore_errors: yes
+
+        - name: Gather CPU Information
+          shell: lscpu
+          register: cpu_info
+          ignore_errors: yes
+
+        - name: Display CPU Information
+          debug:
+            msg: "{{ cpu_info.stdout_lines }}"
+          ignore_errors: yes
+
+        - name: Gather Disk Usage
+          shell: df -h
+          register: disk_info
+          ignore_errors: yes
+
+        - name: Display Disk Usage
+          debug:
+            msg: "{{ disk_info.stdout_lines }}"
+          ignore_errors: yes
+
+        - name: Gather Network Configuration
+          shell: ip addr show
+          register: network_info
+          ignore_errors: yes
+
+        - name: Display Network Configuration
+          debug:
+            msg: "{{ network_info.stdout_lines }}"
+          ignore_errors: yes
+
+        - name: Gather System Uptime
+          shell: uptime
+          register: uptime_info
+          ignore_errors: yes
+
+        - name: Display System Uptime
+          debug:
+            msg: "System Uptime: {{ uptime_info.stdout }}"
+          ignore_errors: yes
+
+        - name: Gather Active Processes
+          shell: ps aux | head -20
+          register: active_processes
+          ignore_errors: yes
+
+        - name: Display Active Processes
+          debug:
+            msg: "{{ active_processes.stdout_lines }}"
+          ignore_errors: yes
+
+    # File operations with many tasks that generate output
+    - name: File operations block
+      block:
+        - name: Create test directory
+          file:
+            path: "{{ dest_path }}"
+            state: directory
+          ignore_errors: yes
+
+        - name: Generate deprecated warning for file operations
+          generate_meta_events:
+            event_type: deprecated
+            message: "File module uses deprecated path parameter"
+          ignore_errors: yes
+
+        # Create many files - each generates output
+        - name: Create and write to file {{ item }}
+          copy:
+            content: |
+              Test content for file {{ item }}
+              Line 2 with more content
+              Line 3 with additional information
+              Line 4 with extra details
+              Line 5 with final content
+              This is a multi-line file content
+              Each file has unique content based on item number
+              File number: {{ item }}
+              Host: {{ inventory_hostname }}
+              Created at: {{ ansible_date_time.iso8601 | default('unknown') }}
+            dest: "{{ dest_path }}/test_file_{{ item }}.txt"
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Creating file {{ item }}"
+          ignore_errors: yes
+
+        - name: Generate deprecated warning for copy operations
+          generate_meta_events:
+            event_type: deprecated
+            message: "Copy module content parameter is deprecated"
+          ignore_errors: yes
+
+        # Append to files - generates output
+        - name: Append content to file {{ item }}
+          lineinfile:
+            path: "{{ dest_path }}/test_file_{{ item }}.txt"
+            line: "Appended line {{ item }} at {{ ansible_date_time.epoch | default('unknown') }}"
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Appending to file {{ item }}"
+          ignore_errors: yes
+
+        # Check file stats - generates output
+        - name: Check and display file stat {{ item }}
+          stat:
+            path: "{{ dest_path }}/test_file_{{ item }}.txt"
+          register: file_stat_result
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Checking file {{ item }}"
+          ignore_errors: yes
+
+        - name: Display file stat {{ item }}
+          debug:
+            msg: "File {{ item }} size: {{ file_stat_result.stat.size }}, mode: {{ file_stat_result.stat.mode }}"
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          ignore_errors: yes
+
+    # Command execution that generates lots of output
+    - name: Command execution block
+      block:
+        - name: Generate deprecated warning for command block
+          generate_meta_events:
+            event_type: deprecated
+            message: "Command module execution is deprecated, use shell instead"
+          ignore_errors: yes
+
+        # Execute many commands that produce output
+        - name: Execute command {{ item }}
+          command: echo "Command output {{ item }} on host {{ inventory_hostname }}"
+          register: cmd_result
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Command {{ item }}"
+          ignore_errors: yes
+
+        - name: Display command result {{ item }}
+          debug:
+            msg: "Command {{ item }} output: {{ cmd_result.stdout }}"
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          ignore_errors: yes
+
+        # Shell commands with more output
+        - name: Shell command {{ item }}
+          shell: |
+            echo "Shell output {{ item }}"
+            echo "Date: $(date)"
+            echo "Hostname: $(hostname)"
+            echo "User: $(whoami)"
+            echo "PWD: $(pwd)"
+          register: shell_result
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Shell {{ item }}"
+          ignore_errors: yes
+
+        - name: Display shell result {{ item }}
+          debug:
+            msg: "Shell {{ item }} output: {{ shell_result.stdout_lines }}"
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          ignore_errors: yes
+
+    # Debug operations that generate output
+    - name: Debug operations block
+      block:
+        - name: Generate deprecated warning for debug
+          generate_meta_events:
+            event_type: deprecated
+            message: "Debug module verbose parameter is deprecated"
+          ignore_errors: yes
+
+        # Many debug tasks
+        - name: Debug message {{ item }}
+          debug:
+            msg: "Debug message number {{ item }} on host {{ inventory_hostname }} at {{ ansible_date_time.epoch | default('unknown') }}"
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Debug {{ item }}"
+          ignore_errors: yes
+
+        - name: Debug variable {{ item }}
+          debug:
+            var: ansible_hostname
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Debug var {{ item }}"
+          ignore_errors: yes
+
+        - name: Debug with dict {{ item }}
+          debug:
+            msg:
+              - "Item {{ item }}"
+              - "Host: {{ ansible_hostname }}"
+              - "User: {{ ansible_user }}"
+              - "Date: {{ ansible_date_time.iso8601 | default('unknown') }}"
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Debug dict {{ item }}"
+          ignore_errors: yes
+
+    # Template operations that generate output
+    - name: Template operations block
+      block:
+        - name: Generate deprecated warning for template
+          generate_meta_events:
+            event_type: deprecated
+            message: "Template module backup parameter is deprecated"
+          ignore_errors: yes
+
+        # Create template-like files
+        - name: Create template file {{ item }}
+          copy:
+            content: |
+              # Template file {{ item }}
+              # Generated at {{ ansible_date_time.iso8601 | default('unknown') }}
+              hostname: {{ ansible_hostname }}
+              user: {{ ansible_user | default('root') }}
+              timestamp: {{ ansible_date_time.epoch | default('unknown') }}
+              item_number: {{ item }}
+              configuration:
+                setting1: value1
+                setting2: value2
+                setting3: value3
+              nested_config:
+                level1:
+                  level2:
+                    level3: deep_value
+              list_config:
+                - item1
+                - item2
+                - item3
+                - item4
+                - item5
+            dest: "{{ dest_path }}/template_{{ item }}.conf"
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Template {{ item }}"
+          ignore_errors: yes
+
+    # Variable operations that generate output
+    - name: Variable operations block
+      block:
+        - name: Generate deprecated warning for variables
+          generate_meta_events:
+            event_type: deprecated
+            message: "Variable registration method is deprecated"
+          ignore_errors: yes
+
+        - name: Register variable {{ item }}
+          command: echo "var_{{ item }}"
+          register: registered_var
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Register {{ item }}"
+          ignore_errors: yes
+
+        - name: Use registered variable {{ item }}
+          debug:
+            msg: "Registered value: {{ registered_var.stdout }}"
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Use var {{ item }}"
+          ignore_errors: yes
+
+        - name: Set fact {{ item }}
+          set_fact:
+            custom_fact_{{ item }}: "fact_value_{{ item }}"
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Set fact {{ item }}"
+          ignore_errors: yes
+
+        - name: Use set fact {{ item }}
+          debug:
+            msg: "Custom fact: {{ custom_fact_{{ item }} }}"
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Use fact {{ item }}"
+          ignore_errors: yes
+
+    # System information gathering that generates output
+    - name: System information gathering
+      block:
+        - name: Generate deprecated warning for system info
+          generate_meta_events:
+            event_type: deprecated
+            message: "System information gathering is deprecated"
+          ignore_errors: yes
+
+        - name: Get hostname {{ item }}
+          command: hostname
+          register: hostname_result
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Hostname {{ item }}"
+          ignore_errors: yes
+
+        - name: Get date {{ item }}
+          command: date
+          register: date_result
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Date {{ item }}"
+          ignore_errors: yes
+
+        - name: Get uptime {{ item }}
+          command: uptime
+          register: uptime_result
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          loop_control:
+            label: "Uptime {{ item }}"
+          ignore_errors: yes
+
+        - name: Display system info {{ item }}
+          debug:
+            msg:
+              - "Hostname: {{ hostname_result.stdout }}"
+              - "Date: {{ date_result.stdout }}"
+              - "Uptime: {{ uptime_result.stdout }}"
+          loop: "{{ range(1, loop_small|int + 1)|list }}"
+          ignore_errors: yes
+
+    # Final deprecated warnings for play 1
+    - name: Final deprecated warnings for play 1
+      generate_meta_events:
+        event_type: deprecated
+        message: "Play 1 completion deprecated warning {{ item }}"
+      loop: "{{ range(1, loop_medium|int + 1)|list }}"
+      ignore_errors: yes
+
+- name: Play 2 - Generate ~4000 lines of output
+  hosts: all
+  gather_facts: false
+  vars:
+    dest_path: /tmp/test_output_play2
+    loop_small: 1
+    loop_medium: 1
+    loop_large: 1
+    loop_xlarge: 1
+
+  tasks:
+    # Play-level deprecation warning - runs once per play
+    - name: Play-level deprecated warning
+      generate_meta_events:
+        event_type: deprecated
+        message: "This play uses deprecated Ansible features"
+      run_once: true
+      ignore_errors: yes
+
+    # Extended operations block 1
+    - name: Extended operations block 1
+      block:
+        - name: Generate deprecated warning for extended ops 1
+          generate_meta_events:
+            event_type: deprecated
+            message: "Extended operations block 1 is deprecated"
+          ignore_errors: yes
+
+        - name: Extended task 1-{{ item }}
+          debug:
+            msg: "Extended task 1-{{ item }} on host {{ inventory_hostname }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 2-{{ item }}
+          command: echo "Extended command 2-{{ item }}"
+          register: ext2_result
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Display extended 2 result {{ item }}
+          debug:
+            msg: "Extended 2 {{ item }}: {{ ext2_result.stdout }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 3-{{ item }}
+          shell: |
+            echo "Extended shell 3-{{ item }}"
+            echo "Date: $(date)"
+            echo "Hostname: $(hostname)"
+          register: ext3_result
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 4-{{ item }}
+          file:
+            path: "{{ dest_path }}/ext1_file_{{ item }}.txt"
+            state: touch
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 5-{{ item }}
+          copy:
+            content: |
+              Extended content {{ item }}
+              Line 2
+              Line 3
+              Line 4
+              Line 5
+            dest: "{{ dest_path }}/ext1_file_{{ item }}.txt"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+    # Extended operations block 2
+    - name: Extended operations block 2
+      block:
+        - name: Generate deprecated warning for extended ops 2
+          generate_meta_events:
+            event_type: deprecated
+            message: "Extended operations block 2 is deprecated"
+          ignore_errors: yes
+
+        - name: Extended task 2-1-{{ item }}
+          debug:
+            msg: "Extended task 2-1-{{ item }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 2-2-{{ item }}
+          command: hostname
+          register: ext2_2_result
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 2-3-{{ item }}
+          command: date
+          register: ext2_3_result
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 2-4-{{ item }}
+          debug:
+            msg:
+              - "Hostname: {{ ext2_2_result.stdout }}"
+              - "Date: {{ ext2_3_result.stdout }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 2-5-{{ item }}
+          file:
+            path: "{{ dest_path }}/ext2_dir_{{ item }}"
+            state: directory
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+    # Extended operations block 3
+    - name: Extended operations block 3
+      block:
+        - name: Generate deprecated warning for extended ops 3
+          generate_meta_events:
+            event_type: deprecated
+            message: "Extended operations block 3 is deprecated"
+          ignore_errors: yes
+
+        - name: Extended task 3-1-{{ item }}
+          debug:
+            var: ansible_hostname
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 3-2-{{ item }}
+          debug:
+            var: ansible_user
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 3-3-{{ item }}
+          set_fact:
+            ext3_fact_{{ item }}: "ext3_value_{{ item }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 3-4-{{ item }}
+          debug:
+            msg: "Fact: {{ ext3_fact_{{ item }} }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 3-5-{{ item }}
+          command: echo "Extended 3-5-{{ item }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+    # Extended operations block 4
+    - name: Extended operations block 4
+      block:
+        - name: Generate deprecated warning for extended ops 4
+          generate_meta_events:
+            event_type: deprecated
+            message: "Extended operations block 4 is deprecated"
+          ignore_errors: yes
+
+        - name: Extended task 4-1-{{ item }}
+          debug:
+            msg: "Extended 4-1-{{ item }} message"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 4-2-{{ item }}
+          copy:
+            content: |
+              Extended 4-2 file {{ item }}
+              Content line 1
+              Content line 2
+              Content line 3
+              Content line 4
+            dest: "{{ dest_path }}/ext4_file_{{ item }}.txt"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 4-3-{{ item }}
+          lineinfile:
+            path: "{{ dest_path }}/ext4_file_{{ item }}.txt"
+            line: "Appended line {{ item }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 4-4-{{ item }}
+          stat:
+            path: "{{ dest_path }}/ext4_file_{{ item }}.txt"
+          register: ext4_stat_result
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 4-5-{{ item }}
+          debug:
+            msg: "File {{ item }} size: {{ ext4_stat_result.stat.size }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+    # Extended operations block 5
+    - name: Extended operations block 5
+      block:
+        - name: Generate deprecated warning for extended ops 5
+          generate_meta_events:
+            event_type: deprecated
+            message: "Extended operations block 5 is deprecated"
+          ignore_errors: yes
+
+        - name: Extended task 5-1-{{ item }}
+          command: echo "Extended 5-1-{{ item }}"
+          register: ext5_1_result
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 5-2-{{ item }}
+          command: echo "Extended 5-2-{{ item }}"
+          register: ext5_2_result
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 5-3-{{ item }}
+          debug:
+            msg:
+              - "Result 1: {{ ext5_1_result.stdout }}"
+              - "Result 2: {{ ext5_2_result.stdout }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 5-4-{{ item }}
+          file:
+            path: "{{ dest_path }}/ext5_dir_{{ item }}"
+            state: directory
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+    # Extended operations block 6
+    - name: Extended operations block 6
+      block:
+        - name: Generate deprecated warning for extended ops 6
+          generate_meta_events:
+            event_type: deprecated
+            message: "Extended operations block 6 is deprecated"
+          ignore_errors: yes
+
+        - name: Extended task 6-1-{{ item }}
+          debug:
+            msg: "Extended 6-1-{{ item }} with timestamp"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 6-2-{{ item }}
+          shell: |
+            echo "Extended 6-2-{{ item }}"
+            echo "Date: $(date)"
+            echo "Host: $(hostname)"
+          register: ext6_2_result
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 6-3-{{ item }}
+          debug:
+            msg: "Shell output: {{ ext6_2_result.stdout_lines }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 6-4-{{ item }}
+          copy:
+            content: |
+              Extended 6-4 file {{ item }}
+              Multiple lines of content
+              More detailed information
+              Additional content lines
+            dest: "{{ dest_path }}/ext6_file_{{ item }}.txt"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+    # Extended operations block 7
+    - name: Extended operations block 7
+      block:
+        - name: Generate deprecated warning for extended ops 7
+          generate_meta_events:
+            event_type: deprecated
+            message: "Extended operations block 7 is deprecated"
+          ignore_errors: yes
+
+        - name: Extended task 7-1-{{ item }}
+          set_fact:
+            ext7_fact1_{{ item }}: "value1_{{ item }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 7-2-{{ item }}
+          set_fact:
+            ext7_fact2_{{ item }}: "value2_{{ item }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 7-3-{{ item }}
+          debug:
+            msg:
+              - "Fact 1: {{ ext7_fact1_{{ item }} }}"
+              - "Fact 2: {{ ext7_fact2_{{ item }} }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 7-4-{{ item }}
+          command: echo "Extended 7-4-{{ item }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+    # Extended operations block 8
+    - name: Extended operations block 8
+      block:
+        - name: Generate deprecated warning for extended ops 8
+          generate_meta_events:
+            event_type: deprecated
+            message: "Extended operations block 8 is deprecated"
+          ignore_errors: yes
+
+        - name: Extended task 8-1-{{ item }}
+          debug:
+            msg: "Extended 8-1-{{ item }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          when: item % 2 == 0
+          ignore_errors: yes
+
+        - name: Extended task 8-2-{{ item }}
+          command: echo "Extended 8-2-{{ item }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          when: item % 3 == 0
+          ignore_errors: yes
+
+        - name: Extended task 8-3-{{ item }}
+          file:
+            path: "{{ dest_path }}/ext8_dir_{{ item }}"
+            state: directory
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+    # Extended operations block 9
+    - name: Extended operations block 9
+      block:
+        - name: Generate deprecated warning for extended ops 9
+          generate_meta_events:
+            event_type: deprecated
+            message: "Extended operations block 9 is deprecated"
+          ignore_errors: yes
+
+        - name: Extended task 9-1-{{ item }}
+          command: hostname
+          register: ext9_hostname_result
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 9-2-{{ item }}
+          command: date
+          register: ext9_date_result
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 9-3-{{ item }}
+          debug:
+            msg:
+              - "Hostname: {{ ext9_hostname_result.stdout }}"
+              - "Date: {{ ext9_date_result.stdout }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+    # Extended operations block 10
+    - name: Extended operations block 10
+      block:
+        - name: Generate deprecated warning for extended ops 10
+          generate_meta_events:
+            event_type: deprecated
+            message: "Extended operations block 10 is deprecated"
+          ignore_errors: yes
+
+        - name: Extended task 10-1-{{ item }}
+          debug:
+            msg: "Extended 10-1-{{ item }} final block"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 10-2-{{ item }}
+          command: echo "Extended 10-2-{{ item }}"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 10-3-{{ item }}
+          shell: echo "Extended 10-3-{{ item }}" && echo "More"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 10-4-{{ item }}
+          file:
+            path: "{{ dest_path }}/ext10_file_{{ item }}.txt"
+            state: touch
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+        - name: Extended task 10-5-{{ item }}
+          copy:
+            content: "Extended 10-5 content {{ item }}\nLine 2\nLine 3"
+            dest: "{{ dest_path }}/ext10_file_{{ item }}.txt"
+          loop: "{{ range(1, loop_xlarge|int + 1)|list }}"
+          ignore_errors: yes
+
+    # Final deprecated warnings for play 2
+    - name: Final deprecated warnings for play 2
+      generate_meta_events:
+        event_type: deprecated
+        message: "Play 2 completion deprecated warning {{ item }}"
+      loop: "{{ range(1, loop_medium|int + 1)|list }}"
+      ignore_errors: yes
