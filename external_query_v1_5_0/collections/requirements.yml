@@ -1,0 +1,5 @@
+---
+collections:
+  - name: https://github.com/aapqa/aapqa-demo-external-collection.git
+    type: git
+    version: v1.5.0

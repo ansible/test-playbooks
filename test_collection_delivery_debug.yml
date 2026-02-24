@@ -1,0 +1,53 @@
+---
+- name: Test Collection Delivery via private_data_dir
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Show ANSIBLE_COLLECTIONS_PATHS
+      debug:
+        msg: "{{ lookup(\"env\", \"ANSIBLE_COLLECTIONS_PATHS\") }}"
+
+    - name: List /runner directory
+      command: ls -la /runner/
+      register: runner_ls
+      
+    - name: Show /runner contents
+      debug:
+        var: runner_ls.stdout_lines
+
+    - name: Check if vendor_collections exists
+      stat:
+        path: /runner/vendor_collections
+      register: vendor_stat
+
+    - name: Show vendor_collections stat
+      debug:
+        var: vendor_stat
+
+    - name: List vendor_collections if it exists
+      command: ls -la /runner/vendor_collections/
+      register: vendor_ls
+      when: vendor_stat.stat.exists
+      
+    - name: Show vendor_collections contents
+      debug:
+        var: vendor_ls.stdout_lines
+      when: vendor_stat.stat.exists
+
+    - name: Try ansible-galaxy collection list
+      command: ansible-galaxy collection list
+      register: galaxy_list
+      
+    - name: Show installed collections
+      debug:
+        var: galaxy_list.stdout_lines
+
+    - name: Use module from vendor collection
+      mytest.verify.hello:
+        name: "AAP 2.6 Test"
+      register: result
+
+    - name: Display result
+      debug:
+        msg: "{{ result.message }}"
+
