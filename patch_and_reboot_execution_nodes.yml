@@ -1,0 +1,69 @@
+---
+- name: disable patch and reboot
+  hosts: all
+  gather_facts: no
+  serial: 1
+  vars:
+    controller_url: "https://{{ lookup('env', 'CONTROLLER_HOST')}}"
+    controller_username: "{{ lookup('env', 'CONTROLLER_USERNAME')}}"
+    controller_password: "{{ lookup('env', 'CONTROLLER_PASSWORD')}}"
+  tasks:
+    - name: gather node info
+      ansible.builtin.uri:
+        url: "{{ controller_url}}/api/v2/instances?hostname={{ inventory_hostname }}"
+        user: "{{ controller_username }}"
+        password: "{{ controller_password }}"
+        validate_certs: false
+        force_basic_auth: true
+      delegate_to: localhost
+      register: node_info
+
+    - name: disable node
+      ansible.builtin.uri:
+        url: "{{ controller_url}}/{{ node_info.json.results[0].url }}"
+        user: "{{ controller_username }}"
+        password: "{{ controller_password }}"
+        method: PATCH
+        validate_certs: false
+        force_basic_auth: true
+        body:
+          enabled: false
+        body_format: json
+      delegate_to: localhost
+
+    - name: wait until running jobs finish
+      ansible.builtin.uri:
+        url: "{{ controller_url}}/api/v2/jobs?execution_node={{ inventory_hostname}},status=running"
+        user: "{{ controller_username }}"
+        password: "{{ controller_password }}"
+        validate_certs: false
+        force_basic_auth: true
+      delegate_to: localhost
+      register: running_jobs
+      until: running_jobs.json.count == 0
+      retries: 1000
+      delay: 60
+
+    - name: upgrade packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+      become: true
+    
+    - name: reboot host
+      ansible.builtin.reboot:
+      become: true
+
+    - name: enable node
+      ansible.builtin.uri:
+        url: "{{ controller_url}}/{{ node_info.json.results[0].url }}"
+        user: "{{ controller_username }}"
+        password: "{{ controller_password }}"
+        method: PATCH
+        validate_certs: false
+        force_basic_auth: true
+        body:
+          enabled: true
+        body_format: json
+      delegate_to: localhost
