@@ -1,0 +1,21 @@
+---
+
+- name: Sleep for a certain amount of time and then write a file for verification
+  hosts: localhost
+  gather_facts: false
+  vars:
+    sleep_interval: 30
+    test_content: Test string
+    file_path: /tmp/test_ansible_write
+
+  tasks:
+    - name: sleep for a specified interval
+      command: sleep '{{ sleep_interval }}'
+
+    - name: write content to a file
+      copy:
+        content: "{{ test_content }}"
+        dest: "{{ file_path }}"
+
+    - name: sleep for a the same specified interval to allow checking stuff
+      command: sleep '{{ sleep_interval }}'
