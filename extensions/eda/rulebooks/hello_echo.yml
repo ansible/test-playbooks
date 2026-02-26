@@ -1,0 +1,12 @@
+---
+- name: Hello World
+  hosts: all
+  sources:
+    - ansible.eda.range:
+        limit: 5
+  rules:
+    - name: Say Hello
+      condition: event.i == 1
+      action:
+        debug:
+          msg: "Hello World!"

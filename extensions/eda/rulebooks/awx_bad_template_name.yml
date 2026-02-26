@@ -1,0 +1,19 @@
+---
+# Basic rulebook with an invalid job template, 
+# to be used with https://github.com/Alex-Izquierdo/eda-awx-project-sample
+- name: Basic short with an invalid job template name
+  hosts: all
+  sources:
+    - ansible.eda.range:
+        limit: 10
+        delay: 0.5
+  rules:
+    - name: Run an invalid JT at 8
+      condition: event.i == 8
+      actions:
+        - run_job_template:
+            organization: Default
+            name: run_bad_basic
+            job_args:
+              extra_vars:
+                fake_execution_time: "5"

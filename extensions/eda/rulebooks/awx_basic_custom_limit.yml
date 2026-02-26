@@ -1,0 +1,36 @@
+---
+- name: Basic run with custom host limit
+  hosts: all
+  sources:
+    - ansible.eda.generic:
+        event_delay: 1
+        payload:
+          - user: "Rick"
+            universe: C-137
+            hosts:
+              - eda_localhost2
+
+          - user: "Morty"
+            universe: C-137
+
+          - user: "Rick"
+            universe: C-132
+
+          - user: "Rick"
+            universe: J-19-Zeta-1
+
+          - user: "Beth"
+            universe: K-22
+
+          - user: "Jerry"
+            universe: C-137
+
+  rules:
+    - name: Run basic with custom host limit
+      condition: event.user == "Rick" and event.universe == "C-137"
+      actions:
+        - run_job_template:
+            organization: Default
+            name: run_basic
+            job_args:
+              limit: "{{ event.hosts }}"

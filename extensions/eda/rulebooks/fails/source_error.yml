@@ -1,0 +1,15 @@
+---
+# Requires DE: https://quay.io/repository/aizquier/eda-testing
+- name: Source error
+  hosts: all
+  sources:
+    - alex_izquierdo.eda_testing.eda_failer:
+        iterations: 10
+        fail_at_index: 3
+        delay: "{{ delay_seconds | default(1) | int }}"
+  rules:
+    - name: Expected to fail at index 3
+      condition: event.i is defined
+      action:
+        debug:
+          msg: "Event received: #{{ event.i }}"

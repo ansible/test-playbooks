@@ -1,0 +1,26 @@
+---
+- name: non alpha numeric keys
+  hosts: all
+  sources:
+    - ansible.eda.generic:
+        payload:
+          - "http://www.example.com": "down"
+          - urls:
+              "http://www.example.com": "up"
+          - नाम: മധു
+
+  rules:
+    - name: r1
+      condition: event["http://www.example.com"] == "down"
+      action:
+        debug:
+          msg: "First check worked"
+    - name: r2
+      condition: event.urls["http://www.example.com"] == "up"
+      action:
+        debug:
+          msg: "Second check worked"
+    - name: r3
+      condition: event["नाम"] is search("മധു", ignorecase=true) 
+      action:
+        print_event:

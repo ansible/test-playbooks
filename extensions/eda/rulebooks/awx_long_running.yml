@@ -1,0 +1,38 @@
+---
+- name: Long Running with Awx JT
+  hosts: all
+  sources:
+    - ansible.eda.generic:
+        loop_count: "{{ total_loops | default(63072000) | int }}" # default two years
+        loop_delay: 1
+        event_delay: 5
+        create_index: iteration
+        payload:
+          - user: "Rick"
+            universe: C-137
+
+          - user: "Morty"
+            universe: C-137
+
+          - user: "Rick"
+            universe: C-132
+
+          - user: "Rick"
+            universe: J-19-Zeta-1
+
+          - user: "Beth"
+            universe: K-22
+
+          - user: "Jerry"
+            universe: C-137
+
+  rules:
+    - name: Awx long running rule
+      condition: event.user == "Rick" and event.universe == "C-137"
+      actions:
+        - run_job_template:
+            organization: Default
+            name: run_basic
+
+        - debug:
+            msg: "Awx long running rulebook, event {{ event.iteration }}"
