@@ -1,5 +1,0 @@
----
-collections:
-  - name: https://github.com/aapqa/aapqa-demo-query-collection.git
-    type: git
-    version: v0.0.1
