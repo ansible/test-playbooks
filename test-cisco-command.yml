@@ -1,0 +1,24 @@
+---
+- hosts: all
+gather_facts: no
+tasks:
+ - name: configure provider
+ set_fact:
+ provider:
+ username: cisco
+ password: cisco
+ - name: interface IP address
+ ios_config:
+ provider: "{{provider}}"
+ lines:
+ - ip address 192.168.1.10 255.255.255.0
+ - no shutdown
+ - full-duplex
+ parents: interface Ethernet 0/1
+ - name: loopback interface
+ ios_config:
+ provider: "{{provider}}"
+ lines:
+ - ip address 1.1.1.1 255.255.255.255
+ - no shutdown
+ parents: interface Loopback0
