@@ -1,0 +1,15 @@
+---
+- hosts: all
+  gather_facts: false
+
+  vars:
+    message_size: 1024 #message size in Bytes[1KB]
+    num_messages: 10  #number of messages
+    chatty_message: "{{ '$' * message_size|int }}"
+
+  tasks:
+
+    - name: Running {{ num_messages }} tasks
+      with_sequence: 'count={{ num_messages }}'
+      ansible.builtin.include_tasks:
+        file: single_payload_task.yml

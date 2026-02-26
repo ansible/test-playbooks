@@ -1,0 +1,13 @@
+---
+- hosts: all
+  gather_facts: false
+
+  vars:
+    num_messages: 50
+
+  tasks:
+
+    - name: Running {{ num_messages }} tasks
+      with_sequence: 'count={{ num_messages }}'
+      ansible.builtin.include_tasks:
+        file: single_task.yml

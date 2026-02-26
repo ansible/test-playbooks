@@ -1,0 +1,8 @@
+---
+- name: send one message
+  ansible.builtin.debug:
+    msg: "{{ chatty_message | default('This is test message') }}"
+
+- name: Pause for {{ pause_time_min | default('1') }} min.
+  ansible.builtin.pause:
+    minutes: "{{ pause_time_min | default('1') }}"
