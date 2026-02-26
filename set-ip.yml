@@ -1,0 +1,14 @@
+---
+- name: show interface
+  host: routers
+  tasks:
+    - name: set ip address loopback 0 router
+      iso_l3_interface:
+        name: loopback 0
+        ipv4: 10.10.10.10/24
+    - name: show ip
+      ios_command:
+        commands:
+          - show ip int brief
+      register: show_ip
+    - debug: var=show_ip.stdout.lines
