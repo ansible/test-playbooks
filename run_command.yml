@@ -3,4 +3,5 @@
 - hosts: all
   gather_facts: true
   tasks:
-    - command: '{{command}}'
+    - command: 
+      - show ip int brief
