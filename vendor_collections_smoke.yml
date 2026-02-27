@@ -1,0 +1,23 @@
+---
+- hosts: all
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Check vendor collections directory
+      ansible.builtin.stat:
+        path: /runner/vendor_collections/ansible_collections/redhat/indirect_accounting
+      register: vendor_dir
+
+    - name: List external query files
+      ansible.builtin.find:
+        paths: /runner/vendor_collections/
+        recurse: yes
+        patterns: "*.yml"
+      register: vendor_files
+      when: vendor_dir.stat.exists
+
+    - name: Show deployment verification results
+      ansible.builtin.debug:
+        msg:
+          vendor_collection_deployed: "{{ vendor_dir.stat.exists }}"
+          external_query_files: "{{ vendor_files.files | default([]) | map(attribute='path') | list }}"
