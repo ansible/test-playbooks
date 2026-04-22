@@ -1,0 +1,30 @@
+---
+- name: colon with spaces in condition
+  hosts: all
+  sources:
+    - name: simple source
+      ansible.eda.generic:
+        payload:
+          - a: 'abc : def'
+          - b: 'xyz : 123'
+          - c: 'xyz : 345'
+          - url: http://www.example.com
+  rules:
+    - name: r1
+      condition: 'event.a == "abc : def"'
+      action:
+        print_event:
+    - name: r2
+      condition: >
+        event.b == "xyz : 123"
+      action:
+        print_event:
+    - name: r3
+      condition: |
+        event.c == "xyz : 345"
+      action:
+        print_event:
+    - name: r4
+      condition: event.url == "http://www.example.com"
+      action:
+        print_event:

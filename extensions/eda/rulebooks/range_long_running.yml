@@ -1,0 +1,71 @@
+---
+- name: Long Running Range
+  hosts: all
+  sources:
+    - ansible.eda.range:
+        limit: 63072000 # 2 years
+        delay: 1
+  rules:
+    - name: Say Hello long running
+      # Gap increases exponentially the first day
+      # then increases linearly after that
+      # one time per day the first month
+      # after one time per month. 
+      condition: >-
+        event.i in [5, 30, 90, 300, 3600, 9000, 18000, 36000]
+        or event.i in [86400,
+                       172800,
+                       259200,
+                       345600,
+                       432000,
+                       518400,
+                       604800,
+                       691200,
+                       777600,
+                       864000,
+                       950400,
+                       1036800,
+                       1123200,
+                       1209600,
+                       1296000,
+                       1382400,
+                       1468800,
+                       1555200,
+                       1641600,
+                       1728000,
+                       1814400,
+                       1900800,
+                       1987200,
+                       2073600,
+                       2160000,
+                       2246400,
+                       2332800,
+                       2419200,
+                       2505600]
+        or event.i in [2591999,
+                       5183999,
+                       7775999,
+                       10367999,
+                       12959999,
+                       15551999,
+                       18143999,
+                       20735999,
+                       23327999,
+                       25919999,
+                       28511999,
+                       31103999,
+                       33695999,
+                       36287999,
+                       38879999,
+                       41471999,
+                       44063999,
+                       46655999,
+                       49247999,
+                       51839999,
+                       54431999,
+                       57023999,
+                       59615999,
+                       62207999]
+      action:
+        debug:
+          msg: "Hello World!, event.i = {{ event.i }}"

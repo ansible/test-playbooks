@@ -1,0 +1,18 @@
+---
+# Basic rulebook with job template, 
+# to be used with https://github.com/Alex-Izquierdo/eda-awx-project-sample
+- name: Basic Batch
+  hosts: all
+  sources:
+    - ansible.eda.range:
+        limit: 20
+        #delay: 0.5
+  rules:
+    - name: Run JT at 8
+      condition: event.i < 800
+      actions:
+        - run_job_template:
+            organization: Default
+            name: run_basic
+
+  execution_strategy: "parallel"

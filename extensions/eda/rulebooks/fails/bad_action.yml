@@ -1,0 +1,19 @@
+---
+# Basic rulebook with invalid action, 
+# to be used with https://github.com/ansible/eda-project-sample
+- name: Bad action
+  hosts: all
+  sources:
+    - ansible.eda.range:
+        limit: 10
+        delay: 1
+  rules:
+    - name: run bad_action 
+      condition: event.i == 1
+      actions:
+        - bad_action:
+            organization: Default
+            name: run_basic
+            job_args:
+              extra_vars:
+                fake_execution_time: "5"
