@@ -25,7 +25,8 @@
     cac_org_admin_count: 100
     cac_org_member_count: 1400
     cac_project_count: 50
-    cac_jt_count: 100
+    cac_credential_count: 150
+    cac_jt_count: 500
 
   tasks:
     - name: Ensure organizations exist
@@ -75,6 +76,17 @@
         state: present
       loop: "{{ range(1, cac_org_member_count + 1) | list }}"
 
+    - name: Ensure credentials exist
+      ansible.controller.credential:
+        name: "cac-credential-{{ item }}"
+        organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
+        credential_type: Machine
+        inputs:
+          username: "cac-svc-{{ item }}"
+          password: "cac-svc-password-{{ item }}"
+        state: present
+      loop: "{{ range(1, cac_credential_count + 1) | list }}"
+
     - name: Ensure projects exist
       ansible.controller.project:
         name: "cac-project-{{ item }}"
@@ -116,5 +128,7 @@
         inventory: "cac-inventory-{{ (item % cac_org_count) + 1 }}"
         playbook: "hello_world.yml"
         job_type: run
+        credentials:
+          - "cac-credential-{{ (item % cac_credential_count) + 1 }}"
         state: present
       loop: "{{ range(1, cac_jt_count + 1) | list }}"
