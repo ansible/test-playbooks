@@ -12,6 +12,9 @@
   connection: local
   gather_facts: false
 
+  environment:
+    CONTROLLER_REQUEST_TIMEOUT: "10"
+
   vars:
     controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
     controller_username: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
