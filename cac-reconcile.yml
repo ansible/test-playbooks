@@ -17,6 +17,7 @@
     controller_username: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
     controller_password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
     controller_validate_certs: false
+    controller_request_timeout: 10.0
     cac_org_count: 5
     cac_project_count: 5
     cac_jt_count: 10
