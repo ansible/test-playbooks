@@ -68,10 +68,16 @@
         state: present
       loop: "{{ range(1, cac_org_count + 1) | list }}"
 
-    - name: Ensure hosts exist in inventories
-      ansible.controller.host:
-        name: "cac-host-{{ item }}"
+    - name: Ensure inventory sources exist
+      ansible.controller.inventory_source:
+        name: "cac-source-{{ item }}"
         inventory: "cac-inventory-{{ item }}"
+        organization: "cac-org-{{ item }}"
+        source: scm
+        source_project: "cac-project-{{ item }}"
+        source_path: "inventories/create_10_hosts.ini"
+        update_on_launch: true
+        overwrite: true
         state: present
       loop: "{{ range(1, cac_org_count + 1) | list }}"
 
