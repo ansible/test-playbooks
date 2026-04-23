@@ -17,8 +17,7 @@
 
   vars:
     controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
-    controller_username: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
-    controller_password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
+    controller_oauthtoken: "{{ lookup('env', 'CONTROLLER_OAUTH_TOKEN') }}"
     controller_validate_certs: false
     controller_request_timeout: 10.0
     cac_org_count: 5
