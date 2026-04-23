@@ -20,9 +20,12 @@
     controller_oauthtoken: "{{ lookup('env', 'CONTROLLER_OAUTH_TOKEN') }}"
     controller_validate_certs: false
     controller_request_timeout: 10.0
-    cac_org_count: 5
-    cac_project_count: 5
-    cac_jt_count: 10
+    cac_org_count: 50
+    cac_team_count: 100
+    cac_org_admin_count: 100
+    cac_org_member_count: 1400
+    cac_project_count: 50
+    cac_jt_count: 100
 
   tasks:
     - name: Ensure organizations exist
@@ -35,18 +38,42 @@
     - name: Ensure teams exist
       ansible.controller.team:
         name: "cac-team-{{ item }}"
-        organization: "cac-org-1"
+        organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
         description: "CaC test team {{ item }}"
         state: present
-      loop: "{{ range(1, 4) | list }}"
+      loop: "{{ range(1, cac_team_count + 1) | list }}"
 
-    - name: Ensure users exist
+    - name: Ensure org admin users exist
       ansible.controller.user:
-        username: "cac-user-{{ item }}"
+        username: "cac-orgadmin-{{ item }}"
         password: "cac-password-{{ item }}"
-        email: "cac-user-{{ item }}@example.com"
+        email: "cac-orgadmin-{{ item }}@example.com"
         state: present
-      loop: "{{ range(1, 6) | list }}"
+      loop: "{{ range(1, cac_org_admin_count + 1) | list }}"
+
+    - name: Ensure org member users exist
+      ansible.controller.user:
+        username: "cac-member-{{ item }}"
+        password: "cac-password-{{ item }}"
+        email: "cac-member-{{ item }}@example.com"
+        state: present
+      loop: "{{ range(1, cac_org_member_count + 1) | list }}"
+
+    - name: Assign org admin roles
+      ansible.controller.role:
+        user: "cac-orgadmin-{{ item }}"
+        role: admin
+        organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
+        state: present
+      loop: "{{ range(1, cac_org_admin_count + 1) | list }}"
+
+    - name: Assign org member roles
+      ansible.controller.role:
+        user: "cac-member-{{ item }}"
+        role: member
+        organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
+        state: present
+      loop: "{{ range(1, cac_org_member_count + 1) | list }}"
 
     - name: Ensure projects exist
       ansible.controller.project:
