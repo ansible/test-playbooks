@@ -51,7 +51,7 @@
     - name: Ensure projects exist
       ansible.controller.project:
         name: "cac-project-{{ item }}"
-        organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
+        organization: "cac-org-{{ item }}"
         scm_type: git
         scm_url: "https://github.com/ansible/test-playbooks.git"
         scm_branch: main
@@ -61,7 +61,7 @@
     - name: Ensure inventories exist
       ansible.controller.inventory:
         name: "cac-inventory-{{ item }}"
-        organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
+        organization: "cac-org-{{ item }}"
         description: "CaC test inventory {{ item }}"
         variables:
           ansible_connection: local
