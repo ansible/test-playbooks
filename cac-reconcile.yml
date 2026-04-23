@@ -1,0 +1,84 @@
+---
+# CaC Reconciliation Playbook for HA/DR Testing
+#
+# Creates/verifies a set of resources exist on the target AAP instance.
+# Idempotent — safe to run repeatedly on a schedule.
+#
+# Requires: ansible.controller collection
+# Credential: "Ansible Automation Platform" type with host, username, password
+
+- name: CaC reconciliation
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
+    controller_username: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
+    controller_password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
+    controller_validate_certs: false
+    cac_org_count: 5
+    cac_project_count: 5
+    cac_jt_count: 10
+
+  tasks:
+    - name: Ensure organizations exist
+      ansible.controller.organization:
+        name: "cac-org-{{ item }}"
+        description: "CaC test organization {{ item }}"
+        state: present
+      loop: "{{ range(1, cac_org_count + 1) | list }}"
+
+    - name: Ensure teams exist
+      ansible.controller.team:
+        name: "cac-team-{{ item }}"
+        organization: "cac-org-1"
+        description: "CaC test team {{ item }}"
+        state: present
+      loop: "{{ range(1, 4) | list }}"
+
+    - name: Ensure users exist
+      ansible.controller.user:
+        username: "cac-user-{{ item }}"
+        password: "cac-password-{{ item }}"
+        email: "cac-user-{{ item }}@example.com"
+        state: present
+      loop: "{{ range(1, 6) | list }}"
+
+    - name: Ensure projects exist
+      ansible.controller.project:
+        name: "cac-project-{{ item }}"
+        organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
+        scm_type: git
+        scm_url: "https://github.com/ansible/test-playbooks.git"
+        scm_branch: main
+        state: present
+      loop: "{{ range(1, cac_project_count + 1) | list }}"
+
+    - name: Ensure inventories exist
+      ansible.controller.inventory:
+        name: "cac-inventory-{{ item }}"
+        organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
+        description: "CaC test inventory {{ item }}"
+        variables:
+          ansible_connection: local
+        state: present
+      loop: "{{ range(1, cac_org_count + 1) | list }}"
+
+    - name: Ensure hosts exist in inventories
+      ansible.controller.host:
+        name: "cac-host-{{ item }}"
+        inventory: "cac-inventory-{{ item }}"
+        state: present
+      loop: "{{ range(1, cac_org_count + 1) | list }}"
+
+    - name: Ensure job templates exist
+      ansible.controller.job_template:
+        name: "cac-jt-{{ item }}"
+        organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
+        project: "cac-project-{{ (item % cac_project_count) + 1 }}"
+        inventory: "cac-inventory-{{ (item % cac_org_count) + 1 }}"
+        playbook: "hello_world.yml"
+        job_type: run
+        state: present
+      loop: "{{ range(1, cac_jt_count + 1) | list }}"
