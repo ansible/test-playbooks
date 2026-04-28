@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 import json
 import random
 import string
@@ -12,7 +14,7 @@ random.seed(29973595994172)
 def random_str(non_ascii=True):
     char_list = string.ascii_letters
     if non_ascii:
-        char_list += (u"읤僪䠱빨胀콩厺殜赬镗צּ䂕ᆑ䭆蜅펵ꂢ綌靸縹聂傈㟩륯Ȳ北벊렙ぶ逖ϥ谺艣뒉摳")
+        char_list += ("읤僪䠱빨胀콩厺殜赬镗צּ䂕ᆑ䭆蜅펵ꂢ綌靸縹聂傈㟩륯Ȳ北벊렙ぶ逖ϥ谺艣뒉摳")
     return "".join([random.choice(char_list) for _ in range(10)])
 
 
