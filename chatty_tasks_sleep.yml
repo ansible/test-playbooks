@@ -1,0 +1,14 @@
+---
+
+- hosts: all
+  gather_facts: false
+  vars:
+    num_messages: 50
+  tasks:
+    - debug:
+        msg: "This is a debug message: {{ item }}"
+      with_sequence: 'count={{ num_messages }}'
+
+    - name: Pause for {{ pause_time_min | default('1') }} min.
+      ansible.builtin.pause:
+        minutes: "{{ pause_time_min | default('1') }}"
