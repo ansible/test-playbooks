@@ -21,12 +21,12 @@
     controller_validate_certs: false
     controller_request_timeout: 10.0
     cac_org_count: 50
-    cac_team_count: 100
-    cac_org_admin_count: 100
-    cac_org_member_count: 1400
+    cac_team_count: 50
+    cac_org_admin_count: 50
+    cac_org_member_count: 50
     cac_project_count: 50
-    cac_credential_count: 150
-    cac_jt_count: 500
+    cac_credential_count: 50
+    cac_jt_count: 50
 
   tasks:
     - name: Ensure organizations exist
