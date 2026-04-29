@@ -126,7 +126,7 @@
         organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
         project: "cac-project-{{ (item % cac_project_count) + 1 }}"
         inventory: "cac-inventory-{{ (item % cac_org_count) + 1 }}"
-        playbook: "hello_world.yml"
+        playbook: "debug.yml"
         job_type: run
         credentials:
           - "cac-credential-{{ (item % cac_credential_count) + 1 }}"
