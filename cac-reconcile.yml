@@ -3,9 +3,10 @@
 #
 # Creates/verifies a set of resources exist on the target AAP instance.
 # Idempotent — safe to run repeatedly on a schedule.
+# Uses async to parallelize API calls across orgs.
 #
 # Requires: ansible.controller collection
-# Credential: "Ansible Automation Platform" type with host, username, password
+# Credential: "Ansible Automation Platform" type with host, oauth_token
 
 - name: CaC reconciliation
   hosts: localhost
@@ -13,44 +14,76 @@
   gather_facts: false
 
   environment:
-    CONTROLLER_REQUEST_TIMEOUT: "10"
+    CONTROLLER_REQUEST_TIMEOUT: "30"
 
   vars:
     controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
     controller_oauthtoken: "{{ lookup('env', 'CONTROLLER_OAUTH_TOKEN') }}"
     controller_validate_certs: false
-    controller_request_timeout: 10.0
+    controller_request_timeout: 30.0
     cac_org_count: 50
-    cac_team_count: 50
-    cac_org_admin_count: 50
-    cac_org_member_count: 50
-    cac_project_count: 50
-    cac_credential_count: 50
-    cac_jt_count: 50
+    cac_users_per_org: 30
+    cac_async_timeout: 300
 
   tasks:
     - name: Ensure organizations exist
       ansible.controller.organization:
         name: "cac-org-{{ item }}"
-        description: "CaC test organization {{ item }}"
+        description: "CaC managed organization {{ item }}"
         state: present
       loop: "{{ range(1, cac_org_count + 1) | list }}"
+      async: "{{ cac_async_timeout }}"
+      poll: 0
+      register: org_async
 
-    - name: Ensure teams exist
+    - name: Wait for organizations
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      loop: "{{ org_async.results }}"
+      register: org_results
+      until: org_results.finished
+      retries: 30
+      delay: 2
+
+    - name: Ensure teams exist (1 per org)
       ansible.controller.team:
         name: "cac-team-{{ item }}"
-        organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
-        description: "CaC test team {{ item }}"
+        organization: "cac-org-{{ item }}"
+        description: "CaC operations team {{ item }}"
         state: present
-      loop: "{{ range(1, cac_team_count + 1) | list }}"
+      loop: "{{ range(1, cac_org_count + 1) | list }}"
+      async: "{{ cac_async_timeout }}"
+      poll: 0
+      register: team_async
 
-    - name: Ensure org admin users exist
+    - name: Wait for teams
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      loop: "{{ team_async.results }}"
+      register: team_results
+      until: team_results.finished
+      retries: 30
+      delay: 2
+
+    - name: Ensure org admin users exist (1 per org)
       ansible.controller.user:
         username: "cac-orgadmin-{{ item }}"
         password: "cac-password-{{ item }}"
         email: "cac-orgadmin-{{ item }}@example.com"
         state: present
-      loop: "{{ range(1, cac_org_admin_count + 1) | list }}"
+      loop: "{{ range(1, cac_org_count + 1) | list }}"
+      async: "{{ cac_async_timeout }}"
+      poll: 0
+      register: admin_async
+
+    - name: Wait for org admins
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      loop: "{{ admin_async.results }}"
+      register: admin_results
+      until: admin_results.finished
+      retries: 30
+      delay: 2
 
     - name: Ensure org member users exist
       ansible.controller.user:
@@ -58,15 +91,39 @@
         password: "cac-password-{{ item }}"
         email: "cac-member-{{ item }}@example.com"
         state: present
-      loop: "{{ range(1, cac_org_member_count + 1) | list }}"
+      loop: "{{ range(1, cac_org_count * cac_users_per_org + 1) | list }}"
+      async: "{{ cac_async_timeout }}"
+      poll: 0
+      register: member_async
+
+    - name: Wait for org members
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      loop: "{{ member_async.results }}"
+      register: member_results
+      until: member_results.finished
+      retries: 60
+      delay: 5
 
     - name: Assign org admin roles
       ansible.controller.role:
         user: "cac-orgadmin-{{ item }}"
         role: admin
-        organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
+        organization: "cac-org-{{ item }}"
         state: present
-      loop: "{{ range(1, cac_org_admin_count + 1) | list }}"
+      loop: "{{ range(1, cac_org_count + 1) | list }}"
+      async: "{{ cac_async_timeout }}"
+      poll: 0
+      register: admin_role_async
+
+    - name: Wait for admin roles
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      loop: "{{ admin_role_async.results }}"
+      register: admin_role_results
+      until: admin_role_results.finished
+      retries: 30
+      delay: 2
 
     - name: Assign org member roles
       ansible.controller.role:
@@ -74,20 +131,44 @@
         role: member
         organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
         state: present
-      loop: "{{ range(1, cac_org_member_count + 1) | list }}"
+      loop: "{{ range(1, cac_org_count * cac_users_per_org + 1) | list }}"
+      async: "{{ cac_async_timeout }}"
+      poll: 0
+      register: member_role_async
 
-    - name: Ensure credentials exist
+    - name: Wait for member roles
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      loop: "{{ member_role_async.results }}"
+      register: member_role_results
+      until: member_role_results.finished
+      retries: 60
+      delay: 5
+
+    - name: Ensure credentials exist (1 per org)
       ansible.controller.credential:
         name: "cac-credential-{{ item }}"
-        organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
+        organization: "cac-org-{{ item }}"
         credential_type: Machine
         inputs:
           username: "cac-svc-{{ item }}"
           password: "cac-svc-password-{{ item }}"
         state: present
-      loop: "{{ range(1, cac_credential_count + 1) | list }}"
+      loop: "{{ range(1, cac_org_count + 1) | list }}"
+      async: "{{ cac_async_timeout }}"
+      poll: 0
+      register: cred_async
 
-    - name: Ensure projects exist
+    - name: Wait for credentials
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      loop: "{{ cred_async.results }}"
+      register: cred_results
+      until: cred_results.finished
+      retries: 30
+      delay: 2
+
+    - name: Ensure projects exist (1 per org)
       ansible.controller.project:
         name: "cac-project-{{ item }}"
         organization: "cac-org-{{ item }}"
@@ -95,9 +176,21 @@
         scm_url: "https://github.com/ansible/test-playbooks.git"
         scm_branch: main
         state: present
-      loop: "{{ range(1, cac_project_count + 1) | list }}"
+      loop: "{{ range(1, cac_org_count + 1) | list }}"
+      async: "{{ cac_async_timeout }}"
+      poll: 0
+      register: project_async
 
-    - name: Ensure inventories exist
+    - name: Wait for projects
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      loop: "{{ project_async.results }}"
+      register: project_results
+      until: project_results.finished
+      retries: 30
+      delay: 2
+
+    - name: Ensure inventories exist (1 per org)
       ansible.controller.inventory:
         name: "cac-inventory-{{ item }}"
         organization: "cac-org-{{ item }}"
@@ -106,8 +199,20 @@
           ansible_connection: local
         state: present
       loop: "{{ range(1, cac_org_count + 1) | list }}"
+      async: "{{ cac_async_timeout }}"
+      poll: 0
+      register: inv_async
 
-    - name: Ensure inventory sources exist
+    - name: Wait for inventories
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      loop: "{{ inv_async.results }}"
+      register: inv_results
+      until: inv_results.finished
+      retries: 30
+      delay: 2
+
+    - name: Ensure inventory sources exist (1 per org)
       ansible.controller.inventory_source:
         name: "cac-source-{{ item }}"
         inventory: "cac-inventory-{{ item }}"
@@ -119,16 +224,40 @@
         overwrite: true
         state: present
       loop: "{{ range(1, cac_org_count + 1) | list }}"
+      async: "{{ cac_async_timeout }}"
+      poll: 0
+      register: invsrc_async
 
-    - name: Ensure job templates exist
+    - name: Wait for inventory sources
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      loop: "{{ invsrc_async.results }}"
+      register: invsrc_results
+      until: invsrc_results.finished
+      retries: 30
+      delay: 2
+
+    - name: Ensure job templates exist (10 per org)
       ansible.controller.job_template:
         name: "cac-jt-{{ item }}"
         organization: "cac-org-{{ (item % cac_org_count) + 1 }}"
-        project: "cac-project-{{ (item % cac_project_count) + 1 }}"
+        project: "cac-project-{{ (item % cac_org_count) + 1 }}"
         inventory: "cac-inventory-{{ (item % cac_org_count) + 1 }}"
         playbook: "debug.yml"
         job_type: run
         credentials:
-          - "cac-credential-{{ (item % cac_credential_count) + 1 }}"
+          - "cac-credential-{{ (item % cac_org_count) + 1 }}"
         state: present
-      loop: "{{ range(1, cac_jt_count + 1) | list }}"
+      loop: "{{ range(1, cac_org_count * 10 + 1) | list }}"
+      async: "{{ cac_async_timeout }}"
+      poll: 0
+      register: jt_async
+
+    - name: Wait for job templates
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      loop: "{{ jt_async.results }}"
+      register: jt_results
+      until: jt_results.finished
+      retries: 60
+      delay: 5
