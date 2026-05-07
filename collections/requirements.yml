@@ -3,6 +3,6 @@ collections:
   - name: "ansible.utils"
   - name: "ansible.controller"
   - name: "ansible.platform"
-  - name: "infra.aap_utilities"
+  - name: "infra.aap_utilities:3.1.0"
   - name: "infra.osbuild"
   - name: "infra.ee_utilities"
