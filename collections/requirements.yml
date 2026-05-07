@@ -3,5 +3,4 @@ collections:
   - name: "ansible.utils"
   - name: "ansible.controller"
   - name: "ansible.platform"
-  - name: "infra.osbuild"
   - name: "infra.ee_utilities"
