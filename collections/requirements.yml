@@ -1,0 +1,8 @@
+collections:
+  - name: "ansible.network"
+  - name: "ansible.utils"
+  - name: "ansible.controller"
+  - name: "ansible.platform"
+  - name: "infra.aap_utilities"
+  - name: "infra.osbuild"
+  - name: "infra.ee_utilities"
