@@ -3,4 +3,3 @@ collections:
   - name: "ansible.utils"
   - name: "ansible.controller"
   - name: "ansible.platform"
-  - name: "infra.ee_utilities"
