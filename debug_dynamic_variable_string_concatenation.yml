@@ -1,0 +1,10 @@
+---
+- hosts: all
+  connection: local
+  gather_facts: false
+  vars:
+    variablename: hello
+    myvar: ename
+  tasks:
+    - name: Show value of 'variablename'
+      debug: msg="{{ lookup('vars', 'variabl' + myvar) }}"
