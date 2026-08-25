@@ -1,0 +1,19 @@
+include *.yml
+include *.cfg
+include *.j2
+include .gitignore
+include LICENSE
+include README.md
+recursive-include become_plugins *
+recursive-include cloud_modules *
+recursive-include collections *
+recursive-include external_query_precedence *
+recursive-include external_query_v1_0_0 *
+recursive-include external_query_v1_5_0 *
+recursive-include external_query_v3_0_0 *
+recursive-include inventories *
+recursive-include library *
+recursive-include roles *
+recursive-include test_collections *
+recursive-include utils *
+recursive-exclude .git *
