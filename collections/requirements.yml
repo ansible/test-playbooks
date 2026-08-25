@@ -1,0 +1,4 @@
+---
+collections:
+  - name: ansible.utils
+    version: "6.0.0"
