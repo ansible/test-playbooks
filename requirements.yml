@@ -1,0 +1,8 @@
+---
+roles:
+  - name: geerlingguy.docker
+    version: 7.4.1
+
+collections:
+  - name: ansible.utils
+    version: "6.0.0"
